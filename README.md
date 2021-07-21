@@ -1,14 +1,8 @@
-# Formulario Concursos y Convocatorias
+# TP Final Programacion Web Dinamica 2021
 ## Para poder iniciar el proyecto:
-Es necesario modificar las siguientes lineas:
+Es necesario modificar configuration.php en el root del proyecto:
 
-/configuration.php
 ```php
 8 $PROYECTO = 'direccion/al/proyecto';
 ```
-
-/utils/funciones.php
-```php
-100 $PROYECTO = 'direccion/al/proyecto';
-```
-Se debe iniciar desde /public/index.php
+## Correr comando `npm i`

@@ -5,28 +5,23 @@ class Rol {
     private $rodescripcion;
     private $mensajeoperacion;
     
-    /** --------------- */
     public function getIdrol(){
         return $this->idrol;
     }
     public function setIdrol($valor){
         $this->idrol = $valor;
     }
-    /** --------------- */
     public function getRodescripcion(){
         return $this->rodescripcion;
     }
     public function setRodescripcion($valor){
         $this->rodescripcion = $valor;
     }
-    /** --------------- */
     public function getmensajeoperacion(){
         return $this->mensajeoperacion;
-        
     }
     public function setmensajeoperacion($valor){
         $this->mensajeoperacion = $valor;
-        
     }
 
 

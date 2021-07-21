@@ -117,7 +117,7 @@ class UsuarioRol {
         return $resp;
     }
     
-    public  function listar($parametro=""){
+    public function listar($parametro=""){
         $arreglo = array();
         $base=new BaseDatos();
         $sql="SELECT * FROM usuariorol ";
