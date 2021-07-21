@@ -1,0 +1,32 @@
+{
+  "name": "tpfinal",
+  "version": "1.0.0",
+  "description": "Proyecto para el trabajo practico final de la materia Prog. Web Dinamica",
+  "main": "index.js",
+  "dependencies": {
+    "@popperjs/core": "^2.9.2",
+    "bootstrap": "^4.6.0",
+    "bootstrap-icons": "^1.4.1",
+    "bootstrap-select": "^1.13.18",
+    "datatables.net": "^1.10.24",
+    "datatables.net-dt": "^1.10.24",
+    "jquery": "^3.6.0",
+    "popper.js": "^1.16.1",
+    "selectize-bootstrap4-theme": "^2.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaniLubary/PWDFinal2021.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SaniLubary/PWDFinal2021/issues"
+  },
+  "homepage": "https://github.com/SaniLubary/PWDFinal2021#readme"
+}
