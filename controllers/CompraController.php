@@ -28,12 +28,14 @@ class CompraController {
      * @param array $param
      */
     public function alta($param){        
-        $resp = false;
+        $param['idcompra'] = null;
         $compra = $this->cargarObjeto($param);
-        if ($compra!=null and $compra->insertar()){
-            $resp = true;
+        
+        if (!$compra!=null or !$compra->insertar()){
+            return false;
         }
-        return $resp;
+        
+        return true;
     }
     
     /**

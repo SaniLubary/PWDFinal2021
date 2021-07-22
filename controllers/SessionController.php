@@ -1,8 +1,9 @@
 <?php
-class Session {
+class SessionController {
     
     public function __construct(){
-        session_start();
+        if(!$this->activa())
+            session_start();
     }
 
     /**
@@ -13,15 +14,18 @@ class Session {
         $usuarioController = new UsuarioController();
         
         $where =['usnombre'=>$usnombre,'uspass'=>$uspass];
-        if ($usuario = $usuarioController->buscar($where)[0]) {
-            if($this->activa()){
-                $_SESSION['idusuario']= $usuario->getIdUsuario();
-                $_SESSION['usnombre']= $usuario->getUsNombre();
-                $_SESSION['uspass']= $usuario->getUsNombre();
-            }
-        }
 
-        return $_SESSION;
+        if (!$usuario = $usuarioController->buscar($where)[0])
+            return false;
+            
+        if(!$this->activa())
+            return false;
+
+        $_SESSION['idusuario']= $usuario->getIdUsuario();
+        $_SESSION['usnombre']= $usuario->getUsNombre();
+        $_SESSION['uspass']= $usuario->getUsNombre();
+
+        return true;
     }
     
     /**
@@ -41,7 +45,7 @@ class Session {
 
     
     public function activa(){
-        if(!session_start()){
+        if(session_status() == PHP_SESSION_NONE){
             return false;
         }
         return true;

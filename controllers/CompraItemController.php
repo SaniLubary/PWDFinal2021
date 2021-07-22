@@ -45,6 +45,7 @@ class CompraItemController {
      */
     public function alta($param){
         $usuario = new CompraItem();
+        $param['idcompraitem'] = null;
         $usuario = $this->cargarObjeto($param);
 
         if (!$usuario or !$usuario->insertar()){

@@ -45,6 +45,7 @@ class UsuarioController {
      */
     public function alta($param){
         $usuario = new Usuario();
+        $param['idusuario'] = null;
         $usuario = $this->cargarObjeto($param);
 
         if (!$usuario or !$usuario->insertar()){

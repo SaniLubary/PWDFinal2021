@@ -45,6 +45,7 @@ class CompraEstadoController {
      */
     public function alta($param){
         $compraEstado = new CompraEstado();
+        $param['idcompraestado'] = null;
         $compraEstado = $this->cargarObjeto($param);
 
         if (!$compraEstado or !$compraEstado->insertar()){

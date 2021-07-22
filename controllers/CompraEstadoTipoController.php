@@ -29,6 +29,7 @@ class CompraController {
      */
     public function alta($param){        
         $resp = false;
+        $param['idcompraestadotipo'] = null;
         $compra = $this->cargarObjeto($param);
         if ($compra!=null and $compra->insertar()){
             $resp = true;
