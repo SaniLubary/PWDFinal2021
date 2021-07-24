@@ -6,11 +6,11 @@ function verEstructura($e) {
     echo "</pre>"; 
 }
 
-function goLastPage() {
+function redireccionarUltimaPagina() {
     global $PROYECTO;
     
-    $host = $_SESSION['HTTP_HOST'];
-    $port = $_SESSION['SERVER_PORT'];
+    $host = $_SERVER['HTTP_HOST'];
+    $port = $_SERVER['SERVER_PORT'];
     
     if(isset($_SESSION['url'])) 
         $url = $_SESSION['url'];
@@ -18,27 +18,35 @@ function goLastPage() {
         $url = "$PROYECTO/vista/index.php";
 
     header("Location: http://$host:$port/$url");
-
+    exit();
 }
 
-function __autoload($class_name){
+// Al seleccionar un producto y no tener una sesion activa
+//  el user tendra que iniciar sesion y luego el producto
+//  seleccionado antes, se agrega automaticamente
+function setProductoSeleccionado($key) {
+    $_COOKIE['producto_seleccionado'] = $key;
+}
+
+function getProductoSeleccionado() {
+    return $_COOKIE['producto_seleccionado'];
+}
+
+spl_autoload_register(function ($class_name) {
     global $ROOT; // seteada en configuracion.php
     
-    // echo "class ".$class_name ;
     $directorys = array(
         $ROOT.'controllers/',
         $ROOT.'models/',
         $ROOT.'models/db/'
-      //  $GLOBALS['ROOT'].'util/class/',
     );
-    // verEstructura($directorys) ;
-    foreach($directorys as $directory){
-        if(file_exists($directory.$class_name . '.php')){
-            // echo "se incluyo".$directory.$class_name . '.php';
-            require_once($directory.$class_name . '.php');
+
+    foreach ($directorys as $directory) {
+        if (file_exists($directory . $class_name . '.php')) {
+            include($directory . $class_name . '.php');
             return;
         }
     }
-}
+});
 
 ?>

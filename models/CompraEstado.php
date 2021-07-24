@@ -77,10 +77,11 @@ class CompraEstado {
         
      }
 
-     public function setear($idcompraestado, $idcompra,$idcompraestadotipo,$cafechafin)    {
+     public function setear($idcompraestado, $idcompra, $idcompraestadotipo, $cafechaini, $cafechafin)    {
         $this->setIdcompraestado($idcompraestado);
         $this->setIdcompra($idcompra);
         $this->setIdcompraestadotipo($idcompraestadotipo);
+        $this->setCefechaini($cafechaini);
         $this->setCafechafin($cafechafin);
     }
     
@@ -97,7 +98,7 @@ class CompraEstado {
         
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
-            $this->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'],$row['cafechafin']); 
+            $this->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'],$row['cafechaini'],$row['cafechafin']); 
         }
         
         return true;       
@@ -173,7 +174,7 @@ class CompraEstado {
                 
                 while ($row = $base->Registro()){
                     $obj = new CompraEstado();
-                    $obj->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'],$row['cafechafin']); 
+                    $obj->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'], $row['cafechaini'],$row['cafechafin']); 
                     array_push($arreglo, $obj);
                 }
                 

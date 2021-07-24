@@ -8,7 +8,8 @@ class UsuarioController {
     public function cargarObjeto($param){
         if(array_key_exists('idusuario',$param) && array_key_exists('usnombre',$param) && array_key_exists('uspass',$param) && array_key_exists('usmail',$param)){
             $obj = new Usuario();
-            return $obj->setear($param['idusuario'], $param['usnombre'], $param['uspass'], $param['usmail'], null);
+            $obj->setear($param['idusuario'], $param['usnombre'], $param['uspass'], $param['usmail'], null);
+            return $obj;
         }
         return null;
     }
@@ -92,7 +93,7 @@ class UsuarioController {
     
     /**
      * @param array $param
-     * @return boolean
+     * @return array<Usuario>
      */
     public function buscar($param){
         $where = " true ";
@@ -109,7 +110,8 @@ class UsuarioController {
                 $where.=" and usdeshabilitado ='".$param['usdeshabilitado']."'";
         }
         
-        $arreglo = Usuario::listar($where);
+        $usuario = new Usuario();
+        $arreglo = $usuario->listar($where);
         
         return $arreglo;
     }

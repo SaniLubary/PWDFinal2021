@@ -128,10 +128,14 @@ class Compra {
         return $resp;
     }
     
-    public static  function listar($parametro=""){
+    public static  function listar($parametro="", $porEstado = false){
         $arreglo = array();
-        $base=new BaseDatos();
-        $sql="SELECT * FROM Compra ";
+        $base = new BaseDatos();
+
+        $sql_base = "SELECT * FROM Compra ";
+        $sql_por_estado = "SELECT c.* FROM compra c INNER JOIN compraestado ce ON ce.idcompra = c.idcompra ";
+        $sql = $porEstado ? $sql_por_estado : $sql_base;
+
         if ($parametro!="") {
             $sql.='WHERE '.$parametro;
         }
@@ -140,7 +144,7 @@ class Compra {
             if($res>0){
                 while ($row = $base->Registro()){
                     $obj = new Compra();
-                    $obj->setear($row['idcompra'], $row['cofecha'], $row['idcompra'], $row['idusuario']); 
+                    $obj->setear($row['idcompra'], $row['cofecha'], $row['idusuario']); 
                     array_push($arreglo, $obj);
                 }
             }

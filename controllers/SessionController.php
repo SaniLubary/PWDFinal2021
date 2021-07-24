@@ -23,7 +23,7 @@ class SessionController {
 
         $_SESSION['idusuario']= $usuario->getIdUsuario();
         $_SESSION['usnombre']= $usuario->getUsNombre();
-        $_SESSION['uspass']= $usuario->getUsNombre();
+        $_SESSION['uspass']= $uspass;
 
         return true;
     }

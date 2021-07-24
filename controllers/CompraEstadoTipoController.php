@@ -1,5 +1,5 @@
 <?php
-class CompraController {
+class CompraEstadoController {
     /**
      * @param array Donde ['nombre-columna' => 'valor']
      * @return object

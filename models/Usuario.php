@@ -98,8 +98,9 @@ class Usuario {
     public function insertar(){
         $resp = false;
         $base=new BaseDatos();
-        $pass_hash = password_hash( $this->getUspass, PASSWORD_DEFAULT );
-        $sql="INSERT INTO usuario(usnombre,uspass,usmail,usdeshabilitado)  VALUES('".$this->getUsnombre()."','".$pass_hash."','".$this->geetUsmail()."','".$this->getDeshabilitado()."');";
+        
+        $sql="INSERT INTO usuario(usnombre,uspass,usmail,usdeshabilitado)  VALUES('".$this->getUsnombre()."','".$this->getUspass()."','".$this->geetUsmail()."','".$this->getDeshabilitado()."');";
+        
         if ($base->Iniciar()) {
             if ($elid = $base->Ejecutar($sql)) {
                 $this->setIdusuario($elid);
@@ -140,27 +141,23 @@ class Usuario {
     }
     
     public function listar($parametro=""){
-
         $arreglo = array();
         $base=new BaseDatos();
         $sql="SELECT * FROM usuario ";
+
         if ($parametro!="") {
             $sql.='WHERE '.$parametro;
         }
+
         $resp = $base->Ejecutar($sql);
         if($resp>-1){
             if($resp>0){
-                
-                
                 while ($row = $base->Registro()){
-                
                     $obj = new Usuario();
                     $obj->setear($row['idusuario'], $row['usnombre'],$row['uspass'],$row['usmail'],$row['usdeshabilitado']) ;
                     array_push($arreglo, $obj);
                 }
-                
             }
-            
         } else {
             $this->setmensajeoperacion(get_class()."->listar: ".$base->getError());
         }

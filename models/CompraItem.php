@@ -151,7 +151,7 @@ class CompraItem {
         if($res>-1){
             if($res>0){
                 while ($row = $base->Registro()){
-                    $obj = new compraitem();
+                    $obj = new compraItem();
                     $obj->setear($row['idcompraitem'], $row['idproducto'], $row['idcompra'], $row['cicantidad']); 
                     array_push($arreglo, $obj);
                 }

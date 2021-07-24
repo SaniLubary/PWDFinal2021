@@ -92,7 +92,7 @@ class CompraItemController {
     
     /**
      * @param array $param
-     * @return boolean
+     * @return array<CompraItem>
      */
     public function buscar($param){
         $where = " true ";
@@ -109,7 +109,7 @@ class CompraItemController {
                 $where.=" and usdeshabilitado ='".$param['usdeshabilitado']."'";
         }
         
-        $arreglo = Usuario::listar($where);
+        $arreglo = CompraItem::listar($where);
         
         return $arreglo;
     }

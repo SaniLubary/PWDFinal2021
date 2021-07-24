@@ -2,7 +2,7 @@
 class CompraController {
     /**
      * @param array Donde ['nombre-columna' => 'valor']
-     * @return object
+     * @return object<Compra>
      */
     private function cargarObjeto($param){
         $compra = null;
@@ -26,6 +26,7 @@ class CompraController {
     
     /**
      * @param array $param
+     * @return object<Compra> $compra
      */
     public function alta($param){        
         $param['idcompra'] = null;
@@ -35,7 +36,7 @@ class CompraController {
             return false;
         }
         
-        return true;
+        return $compra;
     }
     
     /**
@@ -74,23 +75,26 @@ class CompraController {
     
     /**
      * @param array $param
-     * @return boolean
+     * @param boolean $porEstado True si se quiere buscar por estado de tabla compraEstado
+     * @return array<Compra>  
      */
-    public function buscar($param){
+    public function buscar($param, $porEstado = false){
         $where = " true ";
         if ($param<>NULL){
             if  (isset($param['idusuario']))
-                $where.=" and idusuario='".$param['idusuario']."'";
+                $where.=" and idusuario = '".$param['idusuario']."'";
             if  (isset($param['idcompra']))
-                $where.=" and idcompra ='".$param['idcompra']."'";
+                $where.=" and idcompra = '".$param['idcompra']."'";
             if  (isset($param['cofecha']))
-                $where.=" and cofecha ='".$param['cofecha']."'";
+                $where.=" and cofecha = '".$param['cofecha']."'";
+            if  (isset($param['estado']))
+                $where.=" and ce.idcompraestadotipo = '".$param['estado']."'";
         }
         
         $compra= new Compra();
-        $arr = $compra->listar($where, "");
-        return $arr;
+        $arr = $compra->listar($where, $porEstado);
         
+        return $arr;
     }
 }
 ?>
