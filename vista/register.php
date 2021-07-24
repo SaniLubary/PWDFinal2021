@@ -1,6 +1,10 @@
 <?php
 include "../configuration.php";
 
+// Si el usuario ya tiene sesion activa, se redirecciona
+if ($sessionController->validar())
+    redireccionarUltimaPagina();
+
 // Si se hizo submit con los datos requeridos, se intenta . . .
 if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass'])) {
     $usuarioController = new UsuarioController();
@@ -12,7 +16,6 @@ if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass
             // Se setea variable 'error' a vacio por si algun error fue seteado antes
             $_SESSION['error'] = '';
             redireccionarUltimaPagina();
-            exit();
     }
     else echo 'Hubo un error en su registro, intente de nuevo mas tarde.';
 }

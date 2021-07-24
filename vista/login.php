@@ -2,6 +2,11 @@
 include "../configuration.php";
 
 $sessionController = new SessionController();
+
+// Si el usuario ya tiene sesion activa, se redirecciona
+if ($sessionController->validar())
+    redireccionarUltimaPagina();
+
 if (isset($_POST['usnombre']) && isset($_POST['uspass'])) {
     $usuarioController = new UsuarioController();
     if ($usuarioController->alta($_POST)) {
@@ -38,7 +43,7 @@ if (isset($_POST['usnombre']) && isset($_POST['uspass'])) {
             }
         ?>
         
-        <form id="form_login" action="./requests/Session.php" method="POST">
+        <form id="form_login" action="./requests.php" method="POST">
             Usuario: <input type="text" name="usnombre" required><br>
             Contrase&ntilde;a: <input type="password" id="uspass" name="uspass" required><br>
             <input type="submit" value="Enviar" onclick="(e) => submitLoginRegister(e)">

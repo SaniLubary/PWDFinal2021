@@ -21,17 +21,6 @@ function redireccionarUltimaPagina() {
     exit();
 }
 
-// Al seleccionar un producto y no tener una sesion activa
-//  el user tendra que iniciar sesion y luego el producto
-//  seleccionado antes, se agrega automaticamente
-function setProductoSeleccionado($key) {
-    $_COOKIE['producto_seleccionado'] = $key;
-}
-
-function getProductoSeleccionado() {
-    return $_COOKIE['producto_seleccionado'];
-}
-
 spl_autoload_register(function ($class_name) {
     global $ROOT; // seteada en configuracion.php
     

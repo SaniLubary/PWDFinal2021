@@ -1,22 +1,29 @@
 <?php
 include "../configuration.php";
-include "./requests/carrito.php";
 
-// Valida session del usuario
+// Valida session del user
 $sessionController = new SessionController();
 $user_validado = false;
 if ($sessionController->validar())
     $user_validado = true;   
 
-// Setear esta pag como la ultima visitada
-$_SESSION['url'] = "$PROYECTO/vista/index.php"; // La funcion redireccionarUltimaPagina() en utils/funciones.php realiza el redirect a la ultima pag seteada
+// Setear esta pag como la ultima visitada para las redirecciones con redireccionarUltimaPagina() en utils/funciones.php 
+$_SESSION['url'] = "$PROYECTO/vista/index.php"; 
 
 // Buscar Productos a mostrar
 $productoController = new ProductoController();
 $productos = $productoController->buscar();
 
 if ( $user_validado ) {
-    $compra_items = verCarrito();
+    if (array_key_exists('producto',$_COOKIE)) {
+        // La cookie 'producto' existe si el user intento comprar antes de ser validado
+        // Ahora el user esta validado, El producto se agrega y la cookie se elimina
+        $carritoController = new CarritoController();
+        if ($carritoController->agregarAlCarrito($_COOKIE['producto'], 1)) {
+            // Se elimina la cookie seteando su fecha de vencimiento en el pasado
+            setcookie("producto", "", time()-10, "/");
+        }
+    }
 }
 
 ?>

@@ -1,14 +1,13 @@
 /**
  * Chequea si la persona se encuentra loggeada
- * @idproducto Cuando checkSession es llamado desde agregarAlCarrito(), guardar idproducto en cookies desde Session.php 
  */
-async function checkSession(idproducto = '') {
-    await fetch(`./requests/Session.php?validar=true&producto=${idproducto}`, )
+async function checkSession() {
+    await fetch(`./requests.php?validar=true`, )
         .then(response => response.json())
         .then(data => {
             if (data.response == false) {
                 // Redirect to Login Page
-                window.location.replace("http://localhost/facu/TPFinal/vista/login.php");
+                window.location.replace("./login.php");
                 return false
             } else {
                 return true
@@ -21,10 +20,10 @@ async function checkSession(idproducto = '') {
 }
 
 /**
- * Llama a Session.php para cerrar la sesion activa
+ * Llama a Requests.php para cerrar la sesion activa
  */
 function cerrarSession() {
-    fetch('./requests/Session.php?validar=false')
+    fetch('./requests.php?validar=false')
         .then(response => response.json())
         .then(data => {
             if (data.response == false) {
@@ -43,19 +42,20 @@ function cerrarSession() {
 }
 
 /**
- * LLama al scripot Carrito.php para agregar el producto al carrito.
- * @param {*} idproducto Id prod a agregar
+ * LLama al scripts Requests.php para agregar el producto al carrito.
+ * @param {Number} idproducto Id producto a agregar
+ * @param {Number} cicantidad Cuanto del producto a agregar
+ * @param {Boolean|Number} user_validado
  */
-async function agregarAlCarrito(idproducto, user_validado) {
-    //  En el chequeo de sesion se incluye idproducto por si el usuario no tiene sesion iniciada, el producto seleccionado se guarda en cookies mas adelante
-    //      Asi una vez el usuario se identifique, la pagina recuerde el producto que habia seleccionado previamente
+async function agregarAlCarrito(idproducto, cicantidad, user_validado) {
     if (user_validado) {
-        fetch(`./requests/Carrito.php?producto=${idproducto}`, )
+        fetch(`./requests.php?idproducto=${idproducto}&cicantidad=${cicantidad}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data.response);
                 if (data.response == true) {
                     alert('Producto agregado al carrito.')
+                } else {
+                    alert('Se produjo un error.')
                 }
             })
             .catch(error => {
@@ -63,8 +63,11 @@ async function agregarAlCarrito(idproducto, user_validado) {
                 console.error('Ocurrio un problema en la llamada ajax:', error);
             });
     } else {
+        // Si el usuario no esta validado, el producto seleccionado se guarda en cookies.
+        // Para cuando el usuario se identifique, la pagina podra saber el producto 
+        //  seleccionado previo a la validacion, y agregarlo al carrito.
         document.cookie =`producto=${idproducto}; path=/`
-        window.location.replace("http://localhost/facu/TPFinal/vista/login.php");
+        window.location.replace("./login.php");
     }
 
 }
