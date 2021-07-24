@@ -20,7 +20,9 @@ async function checkSession(idproducto = '') {
         });
 }
 
-// Chequea si la persona se encuentra loggeada
+/**
+ * Llama a Session.php para cerrar la sesion activa
+ */
 function cerrarSession() {
     fetch('./requests/Session.php?validar=false')
         .then(response => response.json())
@@ -67,25 +69,36 @@ async function agregarAlCarrito(idproducto, user_validado) {
 
 }
 
-// Cifra la contrasenia para el submit
-function submitLoginRegister() {
+/**
+ * Cifra la contrasenia para el submit
+ *  Aplica estilo al formulario para input correctos/incorrectos
+ * @param {event} e Obj event del boton submit
+ * @returns 
+ */
+function submitLoginRegister(e) {
+    var t = evt.target;
+    let form_correcto = true
+    
+    // Aplicar estilos por cada input requerido
     let form_inputs = document.querySelectorAll('form [required]')
-    let can_submit = true
     for(let i=0; i < form_inputs.length; i++){
         if(form_inputs[i].value === '' && form_inputs[i].hasAttribute('required')){
             form_inputs[i].style.backgroundColor = 'rgba(255, 0, 0, 0.42)'
-            can_submit = false
+            form_correcto = false
         } else {
             form_inputs[i].style.backgroundColor = 'rgba(0, 255, 95, 0.42)'
         }
     }
 
-    if (!can_submit) return false;
+    if (!form_correcto) return false;
     
     let form = document.querySelector('form');
+    // Se oculta el formuilario y se muestra un mensaje de 'Cargando'
     form.style.display = 'none'
     document.getElementById('cargando').style.display = 'block'
     document.getElementById("uspass").value = hex_md5(document.getElementById("uspass").value)
 
-    document.querySelector('form').submit()
+    // Se completa la accion del boton 'submit'
+    t.dispatchEvent( evt )
+    return false
 }

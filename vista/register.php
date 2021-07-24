@@ -1,15 +1,20 @@
 <?php
 include "../configuration.php";
 
-$sessionController = new SessionController();
+// Si se hizo submit con los datos requeridos, se intenta . . .
 if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass'])) {
     $usuarioController = new UsuarioController();
+    // Dar de alta usuario
     if ($usuarioController->alta($_POST)) {
+        $sessionController = new SessionController();
+        // Iniciar su sesion
         if ($sessionController->iniciar($_POST['usnombre'], $_POST['uspass']))
+            // Se setea variable 'error' a vacio por si algun error fue seteado antes
+            $_SESSION['error'] = '';
             redireccionarUltimaPagina();
             exit();
     }
-    else echo 'Hubo un error en su registro.';
+    else echo 'Hubo un error en su registro, intente de nuevo mas tarde.';
 }
 
 ?>
@@ -36,7 +41,7 @@ if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass
             Usuario: <input type="text" name="usnombre" required><br>
             Mail: <input type="email" name="usmail" required><br>
             Contrase&ntilde;a: <input type="password" id="uspass" name="uspass" required><br>
-            <input type="submit" value="Enviar" >
+            <input type="submit" onclick="(e) => submitLoginRegister(e)" value="Enviar" >
         </form>
 
         <div id="cargando" style="display: none;">Cargando...</div>

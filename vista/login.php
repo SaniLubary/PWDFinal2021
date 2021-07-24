@@ -6,6 +6,7 @@ if (isset($_POST['usnombre']) && isset($_POST['uspass'])) {
     $usuarioController = new UsuarioController();
     if ($usuarioController->alta($_POST)) {
         if ($sessionController->iniciar($_POST['usnombre'], $_POST['uspass']))
+            $_SESSION['error'] = '';
             redireccionarUltimaPagina();
     }
     else echo 'Hubo un error en su registro.';
@@ -40,7 +41,7 @@ if (isset($_POST['usnombre']) && isset($_POST['uspass'])) {
         <form id="form_login" action="./requests/Session.php" method="POST">
             Usuario: <input type="text" name="usnombre" required><br>
             Contrase&ntilde;a: <input type="password" id="uspass" name="uspass" required><br>
-            <input type="button" value="Enviar" onclick="submitLoginRegister()">
+            <input type="submit" value="Enviar" onclick="(e) => submitLoginRegister(e)">
         </form>
 
         <div id="cargando" style="display: none;">Cargando...</div>
