@@ -4,7 +4,7 @@ class CompraEstado {
     private $idcompra;
     private $idcompraestadotipo;
     private $cefechaini;
-    private $cafechafin;
+    private $cefechafin;
     private $mensajeoperacion;
     
     public function getIdcompraestado()
@@ -47,14 +47,14 @@ class CompraEstado {
         $this->cefechaini = $cefechaini;
     }
 
-    public function getCafechafin()
+    public function getCefechafin()
     {
-        return $this->cafechafin;
+        return $this->cefechafin;
     }
 
-    public function setCafechafin($cafechafin)
+    public function setCefechafin($cefechafin)
     {
-        $this->cafechafin = $cafechafin;
+        $this->cefechafin = $cefechafin;
     }
 
     public function getMensajeoperacion()
@@ -72,17 +72,17 @@ class CompraEstado {
          $this->idcompra="" ;
          $this->idcompraestadotipo="";
          $this->cefechaini="";
-         $this->cafechafin = null;
+         $this->cefechafin = null;
          $this->mensajeoperacion ="";
         
      }
 
-     public function setear($idcompraestado, $idcompra, $idcompraestadotipo, $cafechaini, $cafechafin)    {
+     public function setear($idcompraestado, $idcompra, $idcompraestadotipo, $cefechaini, $cefechafin)    {
         $this->setIdcompraestado($idcompraestado);
         $this->setIdcompra($idcompra);
         $this->setIdcompraestadotipo($idcompraestadotipo);
-        $this->setCefechaini($cafechaini);
-        $this->setCafechafin($cafechafin);
+        $this->setCefechaini($cefechaini);
+        $this->setCefechafin($cefechafin);
     }
     
     
@@ -98,7 +98,7 @@ class CompraEstado {
         
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
-            $this->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'],$row['cafechaini'],$row['cafechafin']); 
+            $this->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'],$row['cefechaini'],$row['cefechafin']); 
         }
         
         return true;       
@@ -107,8 +107,8 @@ class CompraEstado {
     public function insertar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="INSERT INTO CompraEstado( idcompra ,  idcompraestadotipo ,  cefechaini ,  cafechafin) 
-            VALUES('".$this->getIdcompra()."','".$this->getIdcompraestadotipo()."', '".$this->getCefechaini()."', '".$this->getCafechafin()."') ";
+        $sql="INSERT INTO CompraEstado( idcompra ,  idcompraestadotipo ,  cefechaini ,  cefechafin) 
+            VALUES('".$this->getIdcompra()."','".$this->getIdcompraestadotipo()."', '".$this->getCefechaini()."', '".$this->getCefechafin()."') ";
 
         if (!$base->Iniciar()) {
             $this->setmensajeoperacion("CompraEstado->insertar: ".$base->getError()[2]);
@@ -128,7 +128,7 @@ class CompraEstado {
         $resp = false;
         $base=new BaseDatos();
         $sql="UPDATE CompraEstado SET idcompra='".$this->getIdcompra()."',idcompraestadotipo='".$this->getIdcompraestadotipo()."',
-            cefechaini='".$this->getCefechaini()."', cafechafin='".$this->getCafechafin()."' ";
+            cefechaini='".$this->getCefechaini()."', cefechafin='".$this->getCefechafin()."' ";
         $sql.= " WHERE idcompraestado = ".$this->getIdcompraestado();
 
         if ($base->Iniciar()) {
@@ -174,7 +174,7 @@ class CompraEstado {
                 
                 while ($row = $base->Registro()){
                     $obj = new CompraEstado();
-                    $obj->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'], $row['cafechaini'],$row['cafechafin']); 
+                    $obj->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'], $row['cefechaini'],$row['cefechafin']); 
                     array_push($arreglo, $obj);
                 }
                 

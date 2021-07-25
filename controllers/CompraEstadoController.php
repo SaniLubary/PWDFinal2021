@@ -6,9 +6,10 @@ class CompraEstadoController {
      * @return object
      */
     public function cargarObjeto($param){
-        if(array_key_exists('idcompraestado',$param) && array_key_exists('idcompra',$param) && array_key_exists('idcompraestadotipo',$param) && array_key_exists('cafechaini',$param) && array_key_exists('cafechafin',$param)) {
+        if(array_key_exists('idcompraestado',$param) && array_key_exists('idcompra',$param) && array_key_exists('idcompraestadotipo',$param) && array_key_exists('cefechaini',$param) && array_key_exists('cefechafin',$param)) {
             $obj = new CompraEstado();
-            return $obj->setear($param['idcompraestado'], $param['idcompra'], $param['idcompraestadotipo'], $param['cafechaini'], $param['cafechafin']);
+            $obj->setear($param['idcompraestado'], $param['idcompra'], $param['idcompraestadotipo'], $param['cefechaini'], $param['cefechafin']);
+            return $obj;
         }
         return null;
     }
@@ -44,8 +45,9 @@ class CompraEstadoController {
      * @param array $param
      */
     public function alta($param){
-        $compraEstado = new CompraEstado();
         $param['idcompraestado'] = null;
+        $param['cefechaini'] = null;
+        $param['cefechafin'] = null;
         $compraEstado = $this->cargarObjeto($param);
 
         if (!$compraEstado or !$compraEstado->insertar()){

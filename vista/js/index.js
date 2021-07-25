@@ -73,6 +73,14 @@ async function agregarAlCarrito(idproducto, cicantidad, user_validado) {
 }
 
 /**
+ * Llama a 'agregar al carrito' pero redirije a la pagina de confirmar compra a la vez
+ */
+async function comprar(idproducto, cicantidad, user_validado) {
+    await agregarAlCarrito(idproducto, cicantidad, user_validado);
+    window.location.replace("./comprar.php");
+}
+
+/**
  * Cifra la contrasenia para el submit
  *  Aplica estilo al formulario para input correctos/incorrectos
  * @param {event} e Obj event del boton submit

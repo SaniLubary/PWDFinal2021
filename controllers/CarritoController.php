@@ -7,15 +7,19 @@ class CarritoController {
      * @return array<Compra>(array<CompraItem>) Array de CompraItems por cada compra activa
      */
     function verCarrito() {
+        // Sin usuario para buscar, devuelve vacio
+        if (!array_key_exists('idusuario', $_SESSION))
+            return array();
+
         // Check pedidos de compra en estado 'iniciada'
         $compraController = new CompraController();
         if ($compras = $compraController->buscar(['idusuario' => $_SESSION['idusuario'], 'estado' => 1], true)) {
             // Check productos agregados al pedido de compra
             $compras_activas = [];
             foreach ($compras as $compra) {
-                $compraitemController = new CompraItemController();
-                if ($compra_items = $compraitemController->buscar(['idcompra' => $compra->getIdcompra()])) {
-                    array_push($compras_activas, [ $compra->getIdcompra() => $compra_items]);
+                $compraItemController = new CompraItemController();
+                if ($items = $compraItemController->buscar(['idcompra' => $compra->getIdcompra()])) {
+                    array_push($compras_activas, [ 'compra' => $compra, 'items' => $items]);
                 }
             }
             return $compras_activas;
@@ -26,7 +30,11 @@ class CarritoController {
     
     /**
      * Agrega producto seleccionado al carro, crea nueva compra/carrito si no hay ninguna activa
-     */    
+     * @param int $idproducto
+     * @param int $cicantidad La cantidad que se quiere comprar de un producto
+     * @param int? $idcompra Carrito al que se agregara el producto
+     * @return bool 
+     */
     function agregarAlCarrito($idproducto, $cicantidad) {
         $compras_activas = $this->verCarrito();
         // Si no se encontraron compras activas, crear una
@@ -42,11 +50,13 @@ class CarritoController {
                 $compra = null;
             }
             
-        } else $compra = $compras_activas[0];
+        } else $compra = $compras_activas[0]['compra'];
         
         $compraItemController = new CompraItemController();
+        // Se agrega el item a la compra seleccionada
         if ($compra && $compraItemController->alta(['idcompra' => $compra->getIdcompra(), 'idproducto' => $idproducto, 'cicantidad' => $cicantidad])) {
-            $_SESSION['agregado_al_carrito'] = true;
+            $_SESSION['error'] = '';
+            $_SESSION['agregado_al_carrito'] = $idproducto;
             return true;
         }
         

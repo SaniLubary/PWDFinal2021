@@ -2,6 +2,7 @@
 include "../configuration.php";
 
 // Si el usuario ya tiene sesion activa, se redirecciona
+$sessionController = new SessionController();
 if ($sessionController->validar())
     redireccionarUltimaPagina();
 
@@ -10,7 +11,6 @@ if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass
     $usuarioController = new UsuarioController();
     // Dar de alta usuario
     if ($usuarioController->alta($_POST)) {
-        $sessionController = new SessionController();
         // Iniciar su sesion
         if ($sessionController->iniciar($_POST['usnombre'], $_POST['uspass']))
             // Se setea variable 'error' a vacio por si algun error fue seteado antes

@@ -3,12 +3,13 @@
 class CompraItemController {
     /**
      * @param array Donde ['nombre-columna' => 'valor']
-     * @return object
+     * @return object<CompraItem>|Null
      */
     public function cargarObjeto($param){
         if(array_key_exists('idcompraitem',$param) && array_key_exists('idproducto',$param) && array_key_exists('idcompra',$param) && array_key_exists('cicantidad',$param)){
             $obj = new CompraItem();
-            return $obj->setear($param['idcompraitem'], $param['idproducto'], $param['idcompra'], $param['cicantidad'], null);
+            $obj->setear($param['idcompraitem'], $param['idproducto'], $param['idcompra'], $param['cicantidad']);
+            return $obj;
         }
         return null;
     }
@@ -22,7 +23,7 @@ class CompraItemController {
         
         if( isset($param['idcompraitem']) ){
             $obj = new CompraItem();
-            $obj->setear($param['idcompraitem'],null, null, null, null);
+            $obj->setear($param['idcompraitem'],null, null, null);
             $obj->cargar();
         }
         return $obj;
@@ -44,15 +45,14 @@ class CompraItemController {
      * @param array $param
      */
     public function alta($param){
-        $usuario = new CompraItem();
         $param['idcompraitem'] = null;
-        $usuario = $this->cargarObjeto($param);
+        $compraItem = $this->cargarObjeto($param);
 
-        if (!$usuario or !$usuario->insertar()){
+        if (!$compraItem or !$compraItem->insertar()){
             return false;
         }
         
-        return $usuario;
+        return $compraItem;
     }
     
     /**
@@ -64,9 +64,9 @@ class CompraItemController {
         $resp = false;
         
         if ($this->seteadosCamposClaves($param)){
-            $usuario = $this->cargarObjetoConClave($param);
+            $compraItem = $this->cargarObjetoConClave($param);
             
-            if ($usuario !== null and $usuario->eliminar()){    
+            if ($compraItem !== null and $compraItem->eliminar()){    
                 $resp = true;
             }
         }
@@ -81,9 +81,9 @@ class CompraItemController {
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
             
-            $usuario = $this->cargarObjeto($param);
+            $compraItem = $this->cargarObjeto($param);
             
-            if($usuario !== null and $usuario->modificar()){
+            if($compraItem !== null and $compraItem->modificar()){
                 $resp = true;
             }
         }

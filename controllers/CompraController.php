@@ -6,7 +6,7 @@ class CompraController {
      */
     private function cargarObjeto($param){
         $compra = null;
-        if ( isset($param['idcompra']) && isset($param['cofecha']) && isset($param['idusuario'])) {
+        if ( array_key_exists('idcompra',$param) and array_key_exists('cofecha', $param) and array_key_exists('idusuario',$param) ) {
             $compra = new Compra();
             $compra->setear($param['idcompra'], $param['cofecha'], $param['idusuario']);
         }
@@ -30,6 +30,7 @@ class CompraController {
      */
     public function alta($param){        
         $param['idcompra'] = null;
+        $param['cofecha'] = null;
         $compra = $this->cargarObjeto($param);
         
         if (!$compra!=null or !$compra->insertar()){

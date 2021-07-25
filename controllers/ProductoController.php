@@ -8,7 +8,8 @@ class ProductoController {
     public function cargarObjeto($param){
         if(array_key_exists('idproducto',$param) && array_key_exists('pronombre',$param) && array_key_exists('prodetalle',$param) && array_key_exists('procantstock',$param)){
             $obj = new Producto();
-            return $obj->setear($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['procantstock']);
+            $obj->setear($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['procantstock']);
+            return $obj; 
         }
         return null;
     }
