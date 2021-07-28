@@ -47,7 +47,10 @@ function cerrarSession() {
  * @param {Boolean|Number} user_validado
  */
 async function agregarAlCarrito(idproducto, user_validado) {
-    if (user_validado) {
+    let cicantidad = getCicantidad(idproducto);
+    
+    // Si no se escribio un valor correcto, no continua
+    if ( isNaN(cicantidad) && user_validado ) {
         fetch(`./requests.php?idproducto=${idproducto}&cicantidad=${cicantidad}`)
             .then(response => response.json())
             .then(data => {
@@ -61,21 +64,23 @@ async function agregarAlCarrito(idproducto, user_validado) {
                 alert('Hubo un problema.')
                 console.error('Ocurrio un problema en la llamada ajax:', error);
             });
-    } else {
+    } else if ( cicantidad && !user_validado) {
         // Si el usuario no esta validado, el producto seleccionado se guarda en cookies.
         // Para cuando el usuario se identifique, la pagina podra saber el producto 
         //  seleccionado previo a la validacion, y agregarlo al carrito.
         document.cookie =`producto=${idproducto}; path=/`
+        document.cookie =`cicantidad=${cicantidad}; path=/`
         window.location.replace("./login.php");
+    } else if (cicantidad == null) {
+        return false;
     }
-
 }
 
 /**
  * Llama a 'agregar al carrito' pero redirije a la pagina de confirmar compra a la vez
  */
-async function comprar(idproducto, cicantidad, user_validado) {
-    await agregarAlCarrito(idproducto, cicantidad, user_validado);
+async function comprar(idproducto, user_validado) {
+    await agregarAlCarrito(idproducto, user_validado);
     window.location.replace("./comprar.php");
 }
 
@@ -133,13 +138,45 @@ function pagar() {
         });
 }
 
-function inputEscribirCantidad(e) {
-    let input = document.querySelector(`input[name="${e.name}"]`);
-    if (e.value === 'escribir') {
+function inputEscribirCantidad(id) {
+    let input = document.getElementById(`${id}-cantidad-input`);
+    let select = document.getElementById(`${id}-cantidad-select`);
+    if (select.value === 'escribir') {
         input.style.display = 'block'
         input.disabled = false
     } else {
         input.style.display = 'none'
         input.disabled = true
     }
+}
+
+function getCicantidad(idproducto) {
+    let cicantidad = null
+    
+    let cant_input = document.getElementById(`${idproducto}-cantidad-input`);    
+    let cant_select = document.getElementById(`${idproducto}-cantidad-select`);
+    
+    // Se selecciona el valor del select, y si se indico 'Mas cantidad', se toma el valor escrito
+    if (cant_input.style.display === 'none' || cant_input.style.display === '') {
+        // Se validan valores
+        let s_cant = parseFloat(cant_select.value)
+        if ( isNaN(s_cant) ) {
+            // Si no se selecciono una cantidad, se asume 1 unidad
+            cicantidad = 1
+        } else {
+            cant_select.style.border = '2px solid green'
+            cicantidad = s_cant
+        }
+    } else {
+        // Se validan valores
+        let i_cant = parseFloat(cant_input.value)
+        if ( isNaN(i_cant) ) {
+            cant_input.style.border = '2px solid red'
+        } else {
+            cant_input.style.border = '2px solid green'
+            cicantidad = i_cant
+        }
+    }
+
+    return cicantidad;
 }

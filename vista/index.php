@@ -17,11 +17,13 @@ $productos = $productoController->buscar();
 $carritoController = new CarritoController();
 if ( $user_validado ) {
     if (array_key_exists('producto',$_COOKIE)) {
-        // La cookie 'producto' existe si el user intento comprar antes de ser validado
-        // Ahora el user esta validado, El producto se agrega y la cookie se elimina
-        if ($carritoController->agregarAlCarrito($_COOKIE['producto'], 1)) {
+      // Las cookies 'producto' y 'cicantidad' existen si el user intento comprar antes de ser validado
+      // Ahora el user esta validado, El producto se agrega y la cookie se elimina
+      $cicantidad = array_key_exists('cicantidad',$_COOKIE)?array_key_exists('producto',$_COOKIE):1;
+        if ($carritoController->agregarAlCarrito($_COOKIE['producto'], $cicantidad)) {
             // Se elimina la cookie seteando su fecha de vencimiento en el pasado
             setcookie("producto", "", time()-10, "/");
+            setcookie("cicantidad", "", time()-10, "/");
         }
     }
 }
@@ -132,13 +134,13 @@ function crearTarjeta($producto, $user_validado) {
                 $detalle
             </p>
             <hr>
-            <select name=\"$id-cantidad\" onclick=\"inputEscribirCantidad(this)\" class=\"form-select form-select-sm mt-3 mb-3 custom-input\">
-                <option selected>Elegir Cantidad ($stock disponibles)</option>
+            <select id=\"$id-cantidad-select\" onclick=\"inputEscribirCantidad($id)\" class=\"form-select form-select-sm mt-3 mb-3 custom-input\">
+                <option value='' selected>Elegir Cantidad ($stock disponibles)</option>
                 $opciones_select
             </select>
-            <input placeholder=\"Escriba una cantidad\" name=\"$id-cantidad\" type=\"number\" min=\"0\" max=\"$stock\" class=\"form-input form-input-sm mt-3 mb-3 custom-input cantidad-input\">
-            <a href=\"#!\" class=\"btn btn-primary\">Comprar</a>
-            <a href=\"#!\" class=\"btn btn-primary\"><i class=\"bi bi-cart4\"></i> Agregar</a>
+            <input placeholder=\"Escriba una cantidad (de $stock)\" id=\"$id-cantidad-input\" type=\"number\" min=\"0\" max=\"$stock\" class=\"form-input form-input-sm mt-3 mb-3 custom-input cantidad-input\">
+            <a href=\"#!\" onclick=\"comprar($id, $user_validado)\" class=\"btn btn-primary\">Comprar</a>
+            <a href=\"#!\" onclick=\"agregarAlCarrito($id, $user_validado)\" class=\"btn btn-primary\"><i class=\"bi bi-cart4\"></i> Agregar</a>
             </div>
         </div>
         </div>
