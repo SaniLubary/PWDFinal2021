@@ -107,8 +107,8 @@ class CompraEstado {
     public function insertar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="INSERT INTO CompraEstado( idcompra ,  idcompraestadotipo ,  cefechaini ,  cefechafin) 
-            VALUES('".$this->getIdcompra()."','".$this->getIdcompraestadotipo()."', '".$this->getCefechaini()."', '".$this->getCefechafin()."') ";
+        $sql="INSERT INTO CompraEstado( idcompra ,  idcompraestadotipo ,  cefechafin) 
+            VALUES('".$this->getIdcompra()."','".$this->getIdcompraestadotipo()."', '".$this->getCefechafin()."') ";
 
         if (!$base->Iniciar()) {
             $this->setmensajeoperacion("CompraEstado->insertar: ".$base->getError()[2]);

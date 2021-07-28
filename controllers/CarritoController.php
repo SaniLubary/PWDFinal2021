@@ -45,26 +45,39 @@ class CarritoController {
             if (!$compra = $compraController->alta(['idusuario' => $_SESSION['idusuario']])) {
                 $compra = null;
             }
-    
-            if ($compra && !$compraEstadoController->alta(['idcompra' => $compra->getIdcompra(), 'idcompraestadotipo' => 1])) {
-                $compra = null;
-            }
-            
         } else $compra = $compras_activas[0]['compra'];
         
-        $compraItemController = new CompraItemController();
         // Se agrega el item a la compra seleccionada
-        if ($compra && $compraItemController->alta(['idcompra' => $compra->getIdcompra(), 'idproducto' => $idproducto, 'cicantidad' => $cicantidad])) {
-            $_SESSION['error'] = '';
-            $_SESSION['agregado_al_carrito'] = $idproducto;
-            return true;
+        $compraItemController = new CompraItemController();
+        if (!$compra) {
+            return false;
+        } else if (!$compraItemController->alta(['idcompra' => $compra->getIdcompra(), 'idproducto' => $idproducto, 'cicantidad' => $cicantidad])) {
+            return false;
         }
-        
-        // Si ocurrio un problema creando la nueva compra, o agregando el producto al carrito, se informa el error
-        $_SESSION['error'] = 'Hubo un problema agregando el producto al carrito';
-        // Se des-setea la cookie 'producto' para evitar un loop (si hubo un problema, redirije al index, si el index detecta la cookie 'producto', llama esta funcion)
-        setcookie("producto", "", time()-10, "/");
-        return false;
+
+        // Todo ok
+        return true;
     }
 
+    /**
+     * Finaliza la compra del carrito activo del usuario
+     * @return bool 
+     */
+    function comprar() {
+        $compras_activas = $this->verCarrito();
+
+        // Si se encuentran pedidos de compra activas, se realiza el cambio de estado del ultimo pedido de compra a 'iniciada'
+        if (count($compras_activas) === 0) {
+            return false;
+        }
+        
+        $compra = $compras_activas[0]['compra'];
+        $compraEstadoController = new CompraEstadoController();
+        if ($compra && !$compraEstadoController->alta(['idcompra' => $compra->getIdcompra(), 'idcompraestadotipo' => 1])) {
+            return false;
+        }
+
+        // Todo ok
+        return true;
+    }
 }

@@ -44,10 +44,9 @@ function cerrarSession() {
 /**
  * LLama al scripts Requests.php para agregar el producto al carrito.
  * @param {Number} idproducto Id producto a agregar
- * @param {Number} cicantidad Cuanto del producto a agregar
  * @param {Boolean|Number} user_validado
  */
-async function agregarAlCarrito(idproducto, cicantidad, user_validado) {
+async function agregarAlCarrito(idproducto, user_validado) {
     if (user_validado) {
         fetch(`./requests.php?idproducto=${idproducto}&cicantidad=${cicantidad}`)
             .then(response => response.json())
@@ -112,4 +111,35 @@ function submitLoginRegister(e) {
     // Se completa la accion del boton 'submit'
     t.dispatchEvent( evt )
     return false
+}
+
+function pagar() {
+    fetch('./requests.php?comprar=true')
+        .then(response => response.json())
+        .then(data => {
+            if (data.response == false) {
+                if (data.mensaje) {
+                    alert(data.mensaje)
+                } else {
+                    alert('Hubo un problema.')
+                    window.location.reload(true)
+                }
+            } else {
+                window.location.reload(true)
+            }
+        })
+        .catch(error => {
+            console.error('Ocurrio un problema en la llamada ajax:', error);
+        });
+}
+
+function inputEscribirCantidad(e) {
+    let input = document.querySelector(`input[name="${e.name}"]`);
+    if (e.value === 'escribir') {
+        input.style.display = 'block'
+        input.disabled = false
+    } else {
+        input.style.display = 'none'
+        input.disabled = true
+    }
 }

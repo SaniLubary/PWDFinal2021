@@ -1,6 +1,6 @@
 <?php 
 // -------------
-// Solo se ingresa si fue llamado con $_POST o $_GET
+// Solo se deberia ingresar/usar este script si fue llamado con $_POST o $_GET
 // -------------
 
 include '../configuration.php';
@@ -12,13 +12,33 @@ $sessionController = new SessionController();
 if ($_GET && isset($_GET['idproducto']) && $_GET['idproducto'] !== (null || "")) {
     $carritoController = new CarritoController();
     if (!$carritoController->agregarAlCarrito($_GET['idproducto'], $_GET['cicantidad'])) {
+        // Si ocurrio un problema creando la nueva compra, o agregando el producto al carrito, se informa el error
+        $_SESSION['error'] = 'Hubo un problema agregando el producto al carrito';
+        setcookie("producto", "", time()-10, "/");
         print json_encode(['response' => false]);
         exit();
     }
 
     $_SESSION['error'] = '';
+    $_SESSION['agregado_al_carrito'] = $_GET['idproducto'];
     // Se elimina la cookie de producto, seteando su fecha de vencimiento en el pasado
     setcookie("producto", "", time()-10, "/");
+    print json_encode(['response' => true]);
+    exit();
+}
+
+/**
+ * Finaliza la compra de los productos en el carrito
+ */
+if ($_GET && isset($_GET['comprar']) && $_GET['comprar'] === 'true') {
+    $carritoController = new CarritoController();
+    if (!$carritoController->comprar()) {
+        $_SESSION['error'] = 'Se produjo un error completando su compra.';
+        print json_encode(['response' => false]);
+        exit();
+    }
+    
+    $_SESSION['error'] = '';
     print json_encode(['response' => true]);
     exit();
 }
