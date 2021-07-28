@@ -8,7 +8,7 @@ if ($sessionController->validar())
     $user_validado = true;   
 
 // Setear esta pag como la ultima visitada para las redirecciones con redireccionarUltimaPagina() en utils/funciones.php 
-$_SESSION['url'] = "$PROYECTO/vista/index.php"; 
+$_SESSION['url'] = "$PROYECTO/vista/"; 
 
 // Buscar Productos a mostrar
 $productoController = new ProductoController();

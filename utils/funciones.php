@@ -15,7 +15,7 @@ function redireccionarUltimaPagina() {
     if(isset($_SESSION['url'])) 
         $url = $_SESSION['url'];
     else 
-        $url = "$PROYECTO/vista/index.php";
+        $url = "$PROYECTO/vista/";
 
     header("Location: http://$host:$port/$url");
     exit();

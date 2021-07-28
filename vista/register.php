@@ -48,17 +48,12 @@ if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass
         <?php include './header.php'; ?>
 
         <form id="form_register" action="#" method="POST">
-            Usuario: <input type="text" name="usnombre" required><br>
-            Mail: <input type="email" name="usmail" required><br>
-            Contrase&ntilde;a: <input type="password" id="uspass" name="uspass" required><br>
-            <input type="submit" onclick="(e) => submitLoginRegister(e)" value="Enviar" >
+            Usuario: <input class="form-control" type="text" name="usnombre" required><br>
+            Mail: <input class="form-control" type="email" name="usmail" required><br>
+            Contrase&ntilde;a: <input class="form-control" type="password" id="uspass" name="uspass" required><br>
+            <input class="form-control" type="submit" onclick="(e) => submitLoginRegister(e)" value="Enviar" >
+            <div id="cargando" class="spinner-border" role="status"></div>
         </form>
-
-        <div id="cargando" style="display: none;">Cargando...</div>
-        <div>
-            <button onclick="window.location.replace('./login.php');">Iniciar Sesion</button>
-            <button onclick="window.location.replace('./');">Volver al Inicio</button>
-        </div>
 
         <!-- Se incluye el footer -->
         <?php include './footer.php'; ?>

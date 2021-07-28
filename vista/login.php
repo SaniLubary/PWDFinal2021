@@ -52,16 +52,11 @@ if (isset($_POST['usnombre']) && isset($_POST['uspass'])) {
         ?>
         
         <form id="form_login" action="./requests.php" method="POST">
-            Usuario: <input type="text" name="usnombre" required><br>
-            Contrase&ntilde;a: <input type="password" id="uspass" name="uspass" required><br>
-            <input type="submit" value="Enviar" onclick="(e) => submitLoginRegister(e)">
+            Usuario: <input class="form-control" type="text" name="usnombre" required><br>
+            Contrase&ntilde;a: <input class="form-control" type="password" id="uspass" name="uspass" required><br>
+            <input class="form-control" type="submit" value="Enviar" onclick="(e) => submitLoginRegister(e)">
+            <div id="cargando" style="display: none;" class="spinner-border" role="status"></div>
         </form>
-
-        <div id="cargando" style="display: none;">Cargando...</div>
-        <div>
-            <button onclick="window.location.replace('./register.php');">Crear Usuario</button>
-            <button onclick="window.location.replace('./');">Volver al Inicio</button>
-        </div>
 
         <!-- Se incluye el footer -->
         <?php include './footer.php'; ?>
