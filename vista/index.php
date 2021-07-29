@@ -35,7 +35,7 @@ if ( $user_validado ) {
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -54,23 +54,23 @@ if ( $user_validado ) {
   <main class="my-5">
     <div class="container">
       <section class="text-center">
-        <h4 class="mb-5" style="color: rgba(0,0,0,.7);"><strong>Tienda de Cuadros Online</strong></h4>
-        <!-- // TODO Modificar avisos -->
+        <h4 id="main-title" class="mb-5" style="color: rgba(0,0,0,.7);"><strong>Tienda de Cuadros Online</strong></h4>
         <?php 
-            // Avisos de operaciones realizadas por el usuario
-            if (isset($_SESSION['error'])) {
-                echo "<p style='color: red;'>".$_SESSION['error']."</p>";
-            }
-
-            if (isset($_SESSION['agregado_al_carrito']) && is_numeric($_SESSION['agregado_al_carrito'])) {
-                $nombre_producto = $productos[$_SESSION['agregado_al_carrito']-1]->getPronombre();
-                echo "<p style='color: green;'>Producto '$nombre_producto' agregado al carrito!</p>";
+            // Avisos de errores
+            if (isset($_SESSION['error']) && $_SESSION['error'] === (!null || !'')) {
+                echo "
+                  <div class=\"alert alert-danger\" role=\"alert\">
+                    ".$_SESSION['error']."
+                  </div>
+                ";
             }
         ?>
-        
+        <div id="mensajes_operaciones" class="alert alert-success" style="display: none;" role="alert">
+          <!-- Se injecta un mensaje desde el js -->
+        </div>
+
         <?php 
           // Productos disponibles
-          $cards_por_row = 4;
           $row_actual_tarjetas = 0;
           foreach ($productos as $key => $producto) {
               // Se crean 4 tarjetas por row
@@ -139,8 +139,8 @@ function crearTarjeta($producto, $user_validado) {
                 $opciones_select
             </select>
             <input placeholder=\"Escriba una cantidad (de $stock)\" id=\"$id-cantidad-input\" type=\"number\" min=\"0\" max=\"$stock\" class=\"form-input form-input-sm mt-3 mb-3 custom-input cantidad-input\">
-            <a href=\"#!\" onclick=\"comprar($id, $user_validado)\" class=\"btn btn-primary\">Comprar</a>
-            <a href=\"#!\" onclick=\"agregarAlCarrito($id, $user_validado)\" class=\"btn btn-primary\"><i class=\"bi bi-cart4\"></i> Agregar</a>
+            <a onclick=\"comprar($id, $user_validado)\" class=\"btn btn-primary\">Comprar</a>
+            <a onclick=\"agregarAlCarrito($id, $user_validado)\" class=\"btn btn-primary\"><i class=\"bi bi-cart4\"></i> Agregar</a>
             </div>
         </div>
         </div>

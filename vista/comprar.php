@@ -6,8 +6,9 @@ $_SESSION['error'] = '';
 // Si el usuario No tiene sesion activa, se redirecciona
 $sessionController = new SessionController();
 if (!$sessionController->validar())
-    redireccionarUltimaPagina();
-    
+redireccionarUltimaPagina();
+
+$_SESSION['url'] = "$PROYECTO/vista/compra.php"; 
 $user_validado = true;
 
 // Buscar Carrito para mostrar
@@ -22,57 +23,132 @@ $carrito = $carritoController->verCarrito();
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./css/index.css">
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>TP Final PWD</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+</head>
+<body class="d-flex flex-column min-vh-100">
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <header>
-            <div style="text-align: center; font-size: large;">Tienda Online</div>
-            <div style="display: inline-block;">
-                <div>
-                    <?php 
-                        echo "Bienvenido ".$_SESSION['usnombre']."!<br>";
-                        echo "<button onclick='cerrarSession();'>Cerrar Sesion</button>";
-                        echo "<button onclick='window.location.replace(`./`);'>Volver al Inicio</button>";
-                    ?>
-                </div>
-            </div>
-        </header>
-        <?php 
-            // Avisos de operaciones realizadas por el usuario
-            if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
-                echo "<p style='color: red;'>".$_SESSION['error']."</p>";
+        
+        <!-- Se incluye el header -->
+        <?php include './header.php'; ?>
+
+        <?php
+            if (isset($_SESSION['error'])) {
+                echo $_SESSION['error'];
+                $_SESSION['error'] = '';
             }
         ?>
-        <div style="display: inline-block; position: relative; width: 100%;">
-            <div style="display: flex;">
+<main class="my-5">
+    <div class="container">
+        <section class="text-center">
             <?php 
+                $productos = '';
+                $pagar = '';
+                $mensaje = '';
+
+                // se inicia el card
+                echo "
+                <div class=\"card text-center\">
+                    <div class=\"card-header\" style='background-color: rgba(20, 86, 154, 0.8); color: white;'>
+                    Carrito de compras
+                    </div>
+                    <div class=\"card-body\">
+                ";
+
+                // Se crean las tarjetas
                 if (count($carrito) > 0) {
-                    foreach ($carrito[0]['items'] as $compraitem) {
-                        $idcompraitem = $compraitem->getIdcompraitem();
-                        $idcompra = $compraitem->getIdcompra();
-                        $idproducto = $compraitem->getIdproducto();
-                        $cantidad = $compraitem->getCicantidad();
-                        echo "
-                            <div style='border: 3px solid black; margin: 3px; width: 20%'>
-                            <p>Producto: $idproducto<p>
-                            <p>Cantidad seleccionada: $cantidad<p>
-                            </div>
-                        ";
+                    $cards_por_row = 6;
+                    $row_actual_tarjetas = 0;
+                    foreach ($carrito[0]['productos'] as $producto) {
+                        // Se crean 4 tarjetas por row
+                        $row_actual_tarjetas += 1;
+                        if ($row_actual_tarjetas == 1) echo "<div class=\"row\">";      // inicio de div row
+                        if ($row_actual_tarjetas <= $cards_por_row) crearTarjetaCarrito($producto);  // tarjetas 1 a 4 se crean
+                        if ($row_actual_tarjetas == $cards_por_row) {                                // en la tarjeta nro 4, se cierra el div y resetea $row_actual_tarjetas
+                            echo "</div>";
+                            $row_actual_tarjetas = 0;
+                        }   
                     }
+                    $pagar = "<a class='btn btn-primary' onclick='pagar()'>Pagar Carrito</a>";
+                } else {
+                    $mensaje = 'Su carrito se encuentra vac&iacute;o';
                 }
+
+                // se cierra el card
+                echo "
+                
+                    <p class=\"card-text\">$pagar $mensaje</p>
+                    </div>
+                </div>
+                ";
             ?>
-            </div>
-            <button onclick='pagar()'>Pagar Carrito</button>
-        </div>
+        </section>
+    </div>
+</main>
+        <!-- Se incluye el footer -->
+        <?php include './footer.php'; ?>
+    
+        <script src="./js/md5.js" async defer></script>
         <script src="./js/index.js" async defer></script>
     </body>
 </html>
+
+
+<?php
+
+// Crea tarjetas dinamicamente con modificaciones para el carrito
+function crearTarjetaCarrito($producto) {
+    $id = $producto->getIdproducto();
+    $nombre = $producto->getPronombre();
+    $detalle = $producto->getProdetalle();
+    $cicantidad = $producto->getCicantidad();
+
+    $opciones_select = "";
+    // Si el cicantidad supera los 6, se da la opcion de escribir una cantidad deseada 
+    if ($cicantidad > 6) {
+      $opciones_select = "
+        <option value=\"1\">Quitar 1</option>
+        <option value=\"2\">Quitar 2</option>
+        <option value=\"3\">Quitar 3</option>
+        <option value=\"4\">Quitar 4</option>
+        <option value=\"5\">Quitar 5</option>
+        <option value=\"6\">Quitar 6</option>
+        <option value=\"escribir\">M&aacute;s cantidad</option>
+      ";
+    } else {
+      for ($i=1; $i <= $cicantidad; $i++) { 
+        $opciones_select = $opciones_select."<option value=\"$i\">Cantidad: $i</option>";
+      }
+    }
+
+    echo "
+        <div class=\"col-lg-2 col-md-3 mb-3\">
+        <div class=\"card card-redondeado\">
+            <div class=\"\">
+            <img src=\"./resources/mbfkytc9.bmp\" />
+            </div>
+            <div class=\"card-body\">
+            <h5 class=\"card-title\">$nombre</h5>
+            <hr>
+            <select id=\"$id-cantidad-select\" onclick=\"inputEscribirCantidad($id)\" class=\"form-select form-select-sm mt-3 mb-3 custom-input\">
+                <option value='' selected>$cicantidad Agregados</option>
+                $opciones_select
+            </select>
+            <input placeholder=\"Escriba una cantidad (de $cicantidad)\" id=\"$id-cantidad-input\" type=\"number\" min=\"0\" max=\"$cicantidad\" class=\"form-input form-input-sm mt-3 mb-3 custom-input cantidad-input\">
+            <a onclick=\"quitarDelCarrito($id)\" class=\"btn btn-primary\">Quitar del Carro</a>
+            </div>
+        </div>
+        </div>
+    ";
+    
+}
+
+?>

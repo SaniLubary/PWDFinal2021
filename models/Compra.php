@@ -139,6 +139,10 @@ class Compra {
         if ($parametro!="") {
             $sql.='WHERE '.$parametro;
         }
+        
+        // para seleccionar el ultimo carrito que se haya creado, en caso de que se cree uno nuevo por alguna razon (???) seleccione el ultimo que se modifico
+        $sql .= ' ORDER BY idcompra DESC';
+
         $res = $base->Ejecutar($sql);
         if($res>-1){
             if($res>0){

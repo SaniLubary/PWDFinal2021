@@ -50,9 +50,8 @@ class MenuRolController {
     public function alta($param){
         $resp = false;
         $param['idmenu'] =null;
-        $elObjtRol = $this->cargarObjeto($param);
-        //        verEstructura($elObjtTabla);
-        if ($elObjtRol!=null and $elObjtRol->insertar()){
+        $rol = $this->cargarObjeto($param);
+        if ($rol!=null and $rol->insertar()){
             $resp = true;
         }
         return $resp;
@@ -66,8 +65,8 @@ class MenuRolController {
     public function baja($param){
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
-            $elObjtRol = $this->cargarObjetoConClave($param);
-            if ($elObjtRol!=null and $elObjtRol->eliminar()){
+            $rol = $this->cargarObjetoConClave($param);
+            if ($rol!=null and $rol->eliminar()){
                 $resp = true;
             }
         }
@@ -84,8 +83,8 @@ class MenuRolController {
         //echo "Estoy en modificacion";
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
-            $elObjtRol = $this->cargarObjeto($param);
-            if($elObjtRol!=null and $elObjtRol->modificar()){
+            $rol = $this->cargarObjeto($param);
+            if($rol!=null and $rol->modificar()){
                 $resp = true;
             }
         }

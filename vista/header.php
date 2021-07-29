@@ -15,6 +15,17 @@
             <li class="nav-item active">
               <a class="nav-link" aria-current="page" href="./"><h4><strong>Inicio</strong></h4></a>
             </li>
+            <?php 
+            if ($user_validado) {
+            echo "
+              <li class=\"nav-item mt-1 me-3 me-lg-0\">
+                <a class=\"nav-link\"rel=\"nofollow\">
+                  Bienvenido ".$_SESSION['usnombre']."!
+                </a>
+              </li>
+            ";
+            }
+            ?>
           </ul>
 
           <ul class="navbar-nav d-flex flex-row">
@@ -22,12 +33,15 @@
             <?php 
             if ($user_validado) {
               echo "
-                <li class=\"nav-item me-3 me-lg-0\">
-                  <a class=\"nav-link\"rel=\"nofollow\">
-                    Bienvenido ".$_SESSION['usnombre']."!
-                  </a>
-                </li>
-              ";
+                  <li class=\"nav-item active\">
+                    <a class=\"nav-link me-1\" aria-current=\"page\" href=\"./comprar.php\">
+                    <i class=\"bi bi-cart4\"></i>
+                    Ver carrito
+                    </a>
+                  </li>
+
+                ";
+              
               echo "
                 <li class=\"nav-item me-3 me-lg-0\">
                   <a class=\"nav-link\" href=\"#\" onclick='cerrarSession();' rel=\"nofollow\">

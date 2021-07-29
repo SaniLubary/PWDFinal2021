@@ -50,18 +50,19 @@ async function agregarAlCarrito(idproducto, user_validado) {
     let cicantidad = getCicantidad(idproducto);
     
     // Si no se escribio un valor correcto, no continua
-    if ( isNaN(cicantidad) && user_validado ) {
+    if ( !isNaN(cicantidad) && user_validado ) {
         fetch(`./requests.php?idproducto=${idproducto}&cicantidad=${cicantidad}`)
             .then(response => response.json())
             .then(data => {
                 if (data.response == true) {
-                    alert('Producto agregado al carrito.')
+                    document.getElementById('mensajes_operaciones').innerHTML = `<i class="bi bi-bookmark-check"></i> Producto ${idproducto} agregado al carrito.`
+                    document.getElementById('mensajes_operaciones').style.display = 'block'
+                    window.location.replace("#main-title");
                 } else {
                     alert('Se produjo un error.')
                 }
             })
             .catch(error => {
-                alert('Hubo un problema.')
                 console.error('Ocurrio un problema en la llamada ajax:', error);
             });
     } else if ( cicantidad && !user_validado) {
@@ -80,7 +81,7 @@ async function agregarAlCarrito(idproducto, user_validado) {
  * Llama a 'agregar al carrito' pero redirije a la pagina de confirmar compra a la vez
  */
 async function comprar(idproducto, user_validado) {
-    await agregarAlCarrito(idproducto, user_validado);
+    agregarAlCarrito(idproducto, user_validado);
     window.location.replace("./comprar.php");
 }
 
@@ -179,4 +180,27 @@ function getCicantidad(idproducto) {
     }
 
     return cicantidad;
+}
+
+/**
+ * Quita un producto del carrito de compras de la persona
+ * @param {Number} idcompraitem Id compraitem en el 
+ * @param {Number} cicantidad Id producto a agregar
+ */
+function quitarDelCarrito(idproducto, idcompraitem, cicantidad = 1) {
+    if ( !isNaN(idproducto) && !isNaN(cicantidad)) {
+        fetch(`./requests.php?quitar=true&idcompraitem=${idcompraitem}&cicantidad=${cicantidad}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.response == true) {
+                    alert('Producto quitado del carrito.')
+                } else {
+                    alert('Se produjo un error.')
+                }
+            })
+            .catch(error => {
+                alert('Hubo un problema.')
+                console.error('Ocurrio un problema en la llamada ajax:', error);
+            });
+    }
 }

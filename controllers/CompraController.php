@@ -97,5 +97,17 @@ class CompraController {
         
         return $arr;
     }
+
+    /**
+     * @param int $param
+     * @return array<Producto>
+     */
+    public function listarProductosDeCompra($idcompra){
+        
+        $arreglo = Producto::listarProductosDeCompra($idcompra);
+        
+        return $arreglo;
+    }
+    
 }
 ?>

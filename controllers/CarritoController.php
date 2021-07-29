@@ -13,18 +13,18 @@ class CarritoController {
 
         // Check pedidos de compra en estado 'iniciada'
         $compraController = new CompraController();
-        if ($compras = $compraController->buscar(['idusuario' => $_SESSION['idusuario'], 'estado' => 1], true)) {
+        if ($compras = $compraController->buscar(['idusuario' => $_SESSION['idusuario']])) {
             // Check productos agregados al pedido de compra
             $compras_activas = [];
             foreach ($compras as $compra) {
-                $compraItemController = new CompraItemController();
-                if ($items = $compraItemController->buscar(['idcompra' => $compra->getIdcompra()])) {
-                    array_push($compras_activas, [ 'compra' => $compra, 'items' => $items]);
+                if ( $productos = $compraController->listarProductosDeCompra($compra->getIdcompra()) ) {
+                    array_push($compras_activas, [ 'compra' => $compra, 'productos' => $productos]);
                 }
             }
             return $compras_activas;
         }
     
+        // No se encontraron compras activas
         return array();
     }
     
@@ -47,15 +47,55 @@ class CarritoController {
             }
         } else $compra = $compras_activas[0]['compra'];
         
-        // Se agrega el item a la compra seleccionada
         $compraItemController = new CompraItemController();
-        if (!$compra) {
+
+        if (!$compra)
             return false;
-        } else if (!$compraItemController->alta(['idcompra' => $compra->getIdcompra(), 'idproducto' => $idproducto, 'cicantidad' => $cicantidad])) {
+
+        // Buscar si ya hay un compraitem del producto, si hay, modificar cicantidad sumando la nueva cantidad
+        if ( $compraitem = $compraItemController->buscar(['idcompra' => $compra->getIdcompra(), 'idproducto' => $idproducto])[0] ) {
+            // Se setean los valores para modificar el compraitem
+            // Se suman cicantidades
+            $param = [];
+            $param['idcompraitem'] = $compraitem->getIdcompraitem();
+            $param['idproducto'] = $compraitem->getIdproducto();
+            $param['idcompra'] = $compraitem->getIdcompra();
+            $param['cicantidad'] = $compraitem->getCicantidad() + $cicantidad;
+            
+            if ( !$compraItemController->modificacion($param) ) {
+                return false;
+            }
+            
+        } else {
+            // Si no hay compraitem del producto se lo agrega
+            if ( !$compraItemController->alta(['idcompra' => $compra->getIdcompra(), 'idproducto' => $idproducto, 'cicantidad' => $cicantidad]) ) {
+                return false;
+            }
+        }
+        
+
+
+        // Se agrego el producto
+        return true;
+    }
+
+    /**
+     * Quita producto seleccionado del carro
+     * @param int $idproducto
+     * @param int $cicantidad La cantidad que se quiere quitar de un producto
+     * @param int $idcompra compra de la que se desea quitar del carro
+     * @return bool 
+     */
+    function quitarDelCarrito($cicantidad, $idcompraitem) {
+        $compras_activas = $this->verCarrito();
+
+        // Se quita el item indicado
+        $compraItemController = new CompraItemController();
+        if (!$compraItemController->baja(['idcompraitem' => $idcompraitem, 'cicantidad' => $cicantidad])) {
             return false;
         }
 
-        // Todo ok
+        // Se quito correctamente
         return true;
     }
 
@@ -77,7 +117,7 @@ class CarritoController {
             return false;
         }
 
-        // Todo ok
+        // Se efectuo la compra
         return true;
     }
 }

@@ -4,6 +4,7 @@ class Producto {
     private $pronombre;
     private $prodetalle;
     private $procantstock;
+    private $cicantidad; // se setea cuando se realiza la busqueda en listarProductosDeCompra() para saber cuantos de cada producto agrego una persona a su carro
     private $mensajeoperacion;
     
     public function getIdproducto()
@@ -46,6 +47,16 @@ class Producto {
         return $this->procantstock;
     }
 
+    public function setCicantidad($cicantidad)
+    {
+        $this->cicantidad = $cicantidad;
+    }
+
+    public function getCicantidad()
+    {
+        return $this->cicantidad;
+    }
+
 
     public function getMensajeoperacion()
     {
@@ -66,11 +77,12 @@ class Producto {
         
      }
 
-     public function setear($idproducto, $pronombre, $prodetalle, $procantstock)    {
+     public function setear($idproducto, $pronombre, $prodetalle, $procantstock, $cicantidad=null)    {
         $this->setIdproducto($idproducto);
         $this->setPronombre($pronombre);
         $this->setProdetalle($prodetalle);
         $this->setProcantstock($procantstock);
+        $this->setCicantidad($cicantidad);
     }
     
     
@@ -165,5 +177,38 @@ class Producto {
         
         return $arreglo;
     }
+
+    // Sql que busca los productos para un carrito especifico, uniendo productos y compra, a compraitem, con columna de cantidad de productos seleccionados
+    public static  function listarProductosDeCompra($idcompra){
+        $arreglo = array();
+        $base = new BaseDatos();
+
+        // No se puede realizar una busqueda sin un id especifico
+        if ($idcompra !== null) {
+            $sql="SELECT c2.cicantidad , p.*
+                from producto p 
+                inner join compraitem c2  on c2.idproducto = p.idproducto 
+                inner join compra c on c.idcompra = c2.idcompra 
+                where c.idcompra = $idcompra
+                group by p.idproducto";
+    
+            $res = $base->Ejecutar($sql);
+            if($res>-1){
+                if($res>0){
+                    
+                    while ($row = $base->Registro()){
+                        $obj = new Producto();
+                        $obj->setear($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['procantstock'], $row['cicantidad']); 
+                        array_push($arreglo, $obj);
+                    }
+                    
+                }
+                
+            } 
+        } 
+        
+        return $arreglo;
+    }
+    
 }
 ?>
