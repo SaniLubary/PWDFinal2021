@@ -17,3 +17,15 @@ $PROYECTO = 'Facu/TPFinal';
 $ROOT = $_SERVER['DOCUMENT_ROOT']."/$PROYECTO/";
 
 require $ROOT.'utils/funciones.php';
+
+// Valida session del user
+$sessionController = new SessionController();
+$user_validado = false;
+if ($sessionController->validar())
+    $user_validado = true;   
+
+$rol = $sessionController->getRol();
+if ($rol === 1) {
+  header("Location: ./admin.php");
+  exit();
+}

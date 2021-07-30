@@ -102,11 +102,16 @@ CREATE TABLE `menu` (
 --
 
 INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
-(7, 'nuevo', 'kkkkk', NULL, NULL),
-(8, 'nuevo', 'kkkkk', NULL, NULL),
-(9, 'nuevo', 'kkkkk', 7, NULL),
-(10, 'nuevo', 'kkkkk', NULL, NULL),
-(11, 'nuevo', 'kkkkk', NULL, NULL);
+(1, 'Ver Carrito', 'bi bi-cart4', NULL, NULL),
+(2, 'Cerrar Sesion', 'bi bi-box-arrow-right', NULL, NULL),
+(3, 'Iniciar Sesion', 'bi bi-person-circle', NULL, NULL),
+(4, 'Crear Cuenta', 'bi bi-person-lines-fill', NULL, NULL),
+(5, 'Cuenta', 'bi bi-person-lines-fill', NULL, NULL),
+(6, 'Datos Personales', '', 5, NULL),
+(7, 'Historial de Compras', '', 5, NULL),
+(8, 'Usuarios', '', NULL, NULL),
+(9, 'Productos', '', NULL, NULL),
+(10, 'Menus', '', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -118,6 +123,22 @@ CREATE TABLE `menurol` (
   `idmenu` bigint(20) NOT NULL,
   `idrol` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `menurol`
+--
+
+INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
+-- Ver carrito y manejar su propia cuenta solo clientes
+(1, 2), 
+(5, 2), 
+(6, 2), 
+(7, 2),
+-- Iniciar/cerrar sesion y crear cuenta pueden hacerlo todos, por lo que no se agrega en 'menurol'
+-- Menu de secciones que administra el usuario de tipo 'admin'
+(8, 1),
+(9, 1),
+(10, 1);
 
 -- --------------------------------------------------------
 

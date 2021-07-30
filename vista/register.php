@@ -1,12 +1,8 @@
 <?php
 include "../configuration.php";
 
-// Si el usuario ya tiene sesion activa, se redirecciona
-$sessionController = new SessionController();
-if ($sessionController->validar())
+if ($user_validado)
     redireccionarUltimaPagina();
-
-$user_validado = false;
 
 // Si se hizo submit con los datos requeridos, se intenta . . .
 if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass'])) {

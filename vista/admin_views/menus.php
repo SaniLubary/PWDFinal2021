@@ -5,9 +5,19 @@ $menus = $menuController->buscar([]);
 // Crear array de opciones para el select idpadre dentro de la tabla
 // Durante la creacion de la tabla, se quita el elemento del arr con 'key' => 'id propio', ya que menu padre no puede ser si mismo
 $opciones = [];
+$idpadre_menombre = [];
 foreach ($menus as $menu) {
   $idmenu = $menu->getIdmenu();
   $menombre = $menu->getMenombre();
+
+  // Si se tiene un id padre, se busca y guarda su nombre para poder agarralo en la creacion de la tabla mas abajo
+  if ($menu->getIdpadre()) {
+    $menu_padre = $menuController->buscar(['idmenu'=>$menu->getIdpadre()]);
+    if (count($menu_padre) > 0) {
+      $idpadre_menombre[$menu->getIdpadre()] = $menu_padre[0]->getMenombre();
+    }
+  }
+  
   $opciones[$idmenu] = "<option value=\"$idmenu\">$idmenu: $menombre</option>";
 }
 
@@ -31,17 +41,22 @@ foreach ($menus as $menu) {
       </tr>
     </thead>
     <tbody>
+      <!-- INICIO DE TABLA CON UN FOREACH -->
       <?php
       foreach ($menus as $menu) {
-        // opciones para el idpadre, el menu no deberia ser su propio padre
+        // opciones para select del el idpadre, el menu no deberia ser su propio padre
         $opciones_select = $opciones;
         $opciones_select[$menu->getIdmenu()] = null; 
         $opciones_select_imploded = implode(" ", $opciones_select);
+        
         $id = $menu->getIdmenu();
+
+        // Se formatea la fecha de menu-deshabilitado
         $medeshabilitado = $menu->getMedeshabilitado();
         if (isset($medeshabilitado) && $medeshabilitado !== (null or '')){
           $medeshabilitado = date("Y-m-d",strtotime($medeshabilitado));
-        }else $medeshabilitado = ''; 
+        } else $medeshabilitado = ''; 
+        
       ?>
         <tr id="tr-<?= $id ?>">
           <td>
@@ -53,7 +68,7 @@ foreach ($menus as $menu) {
           <td><input name="medescripcion" id="<?=$id?>medescripcion" class="form-control" type="text" value="<?= $menu->getMedescripcion() ?>"></td>
           <td>
             <select name="idpadre" id="<?=$id?>idpadre" class="form-select form-select-sm">
-                <option value='<?= $menu->getIdpadre() ?>' selected><?= $menu->getIdpadre() ?></option>
+                <option value='<?= $menu->getIdpadre() ?>' selected><?= $menu->getIdpadre()? $menu->getIdpadre().': '.$idpadre_menombre[$menu->getIdpadre()]:'' ?></option>
                 <?= $opciones_select_imploded ?>
             </select>
           <td>
@@ -69,7 +84,8 @@ foreach ($menus as $menu) {
             </button>
           </td>
         </tr>
-      <?php } ?>
+      <!-- CIERRE PHP FOREACH -->
+      <?php } ?> 
     </tbody>
   </table>
   <!-- Abrir Modal -->
@@ -80,7 +96,7 @@ foreach ($menus as $menu) {
 </div>
 <hr>
 
-<!-- Modal nuevo elemento -->
+<!-- Modal nuevo Elemento -->
 <div class="modal fade" id="modal-nuevo-elemento" tabindex="-1" aria-labelledby="modal-nuevo-elemento-Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">

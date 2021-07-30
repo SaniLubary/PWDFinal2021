@@ -1,6 +1,6 @@
 <footer class="mt-auto bg-light text-lg-start">
   <?php 
-        if ($user_validado && $rol !== 1) {
+        if ($user_validado && (isset($rol) && $rol !== 1)) {
           // mostrar carrito o boton 'volver' acorde a vista actual
           if ($_SESSION['url'] !== "$PROYECTO/vista/comprar.php") {
             echo "

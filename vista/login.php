@@ -1,12 +1,8 @@
 <?php
 include "../configuration.php";
 
-$sessionController = new SessionController();
-
-$user_validado = false; // se setea para que se inicie el header correspondiente a usuario no validado
-
 // Si el usuario ya tiene sesion activa, se redirecciona
-if ($sessionController->validar())
+if ($user_validado)
     redireccionarUltimaPagina();
 
 ?>

@@ -3,12 +3,9 @@ include "../configuration.php";
 
 $_SESSION['error'] = '';
 
-// Si el usuario No tiene sesion activa, se redirecciona
-$sessionController = new SessionController();
-if (!$sessionController->validar()) redireccionarUltimaPagina();
+if (!$user_validado) redireccionarUltimaPagina();
 
 $_SESSION['url'] = "$PROYECTO/vista/comprar.php"; 
-$user_validado = true;
 
 // Buscar Carrito para mostrar
 $carritoController = new CarritoController();
