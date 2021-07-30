@@ -5,10 +5,9 @@ $_SESSION['error'] = '';
 
 // Si el usuario No tiene sesion activa, se redirecciona
 $sessionController = new SessionController();
-if (!$sessionController->validar())
-redireccionarUltimaPagina();
+if (!$sessionController->validar()) redireccionarUltimaPagina();
 
-$_SESSION['url'] = "$PROYECTO/vista/compra.php"; 
+$_SESSION['url'] = "$PROYECTO/vista/comprar.php"; 
 $user_validado = true;
 
 // Buscar Carrito para mostrar
@@ -77,7 +76,7 @@ $carrito = $carritoController->verCarrito();
                             $row_actual_tarjetas = 0;
                         }   
                     }
-                    $pagar = "<a class='btn btn-primary' onclick='pagar()'>Pagar Carrito</a>";
+                    $pagar = "<a class='btn btn-success' onclick='pagar()'>Pagar Carrito</a>";
                 } else {
                     $mensaje = 'Su carrito se encuentra vac&iacute;o';
                 }
@@ -110,6 +109,7 @@ function crearTarjetaCarrito($producto) {
     $nombre = $producto->getPronombre();
     $detalle = $producto->getProdetalle();
     $cicantidad = $producto->getCicantidad();
+    $idcompraitem = $producto->getIdcompraitem();
 
     $opciones_select = "";
     // Si el cicantidad supera los 6, se da la opcion de escribir una cantidad deseada 
@@ -143,7 +143,7 @@ function crearTarjetaCarrito($producto) {
                 $opciones_select
             </select>
             <input placeholder=\"Escriba una cantidad (de $cicantidad)\" id=\"$id-cantidad-input\" type=\"number\" min=\"0\" max=\"$cicantidad\" class=\"form-input form-input-sm mt-3 mb-3 custom-input cantidad-input\">
-            <a onclick=\"quitarDelCarrito($id)\" class=\"btn btn-primary\">Quitar del Carro</a>
+            <a onclick=\"quitarDelCarrito($id, $idcompraitem)\" class=\"btn btn-danger\">Quitar del Carro</a>
             </div>
         </div>
         </div>

@@ -77,10 +77,11 @@ class Menu {
         
      }
 
-     public function setear($idmenu, $menombre,$medescripcion,$medeshabilitado)    {
+     public function setear($idmenu, $menombre,$medescripcion, $idpadre,$medeshabilitado)    {
         $this->setIdmenu($idmenu);
         $this->setMenombre($menombre);
         $this->setMedescripcion($medescripcion);
+        $this->setIdpadre($idpadre);
         $this->setMedeshabilitado($medeshabilitado);
     }
     
@@ -97,7 +98,7 @@ class Menu {
         
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
-            $this->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$row['medeshabilitado']); 
+            $this->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$row['idpadre'],$row['medeshabilitado']); 
         }
         
         return true;       
@@ -159,13 +160,24 @@ class Menu {
         return $resp;
     }
     
-    public static function listar($condicion=""){
+    /**
+     * @param string $condicion condicional 'where'
+     * @param number|null $idrol Si se desea buscar los menus que correspondan a un cierto rol
+     */
+    public static function listar($condicion="", $idrol = null){
         $arreglo = array();
-        $base=new BaseDatos();
-        $sql="SELECT * FROM menu ";
+        $base = new BaseDatos();
+        $sql = "SELECT * FROM menu ";
 
         if ($condicion!="") {
-            $sql.='WHERE '.$condicion;
+            $sql .= 'WHERE '.$condicion;
+        }
+
+        if ($idrol !== null) {
+            $sql = "SELECT m.* from menu m 
+            inner join menurol m2 on m2.idmenu = m.idmenu 
+            inner join rol r on r.idrol = m2.idrol 
+            where m2.idrol = $idrol";
         }
         $res = $base->Ejecutar($sql);
         if($res>-1){
@@ -173,7 +185,7 @@ class Menu {
                 
                 while ($row = $base->Registro()){
                     $obj = new Menu();
-                    $obj->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$row['medeshabilitado']); 
+                    $obj->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$row['idpadre'], $row['medeshabilitado']); 
                     array_push($arreglo, $obj);
                 }
                 

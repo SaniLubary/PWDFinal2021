@@ -13,7 +13,7 @@ session_start();
  *  'http://localhost/hasta/el/root/de/tu/proyecto' 
  *  Por ejemplo 'Facu/TPFinal'
  */
-$PROYECTO ='Facu/TPFinal';
-$ROOT =$_SERVER['DOCUMENT_ROOT']."/$PROYECTO/";
+$PROYECTO = 'Facu/TPFinal';
+$ROOT = $_SERVER['DOCUMENT_ROOT']."/$PROYECTO/";
 
 require $ROOT.'utils/funciones.php';

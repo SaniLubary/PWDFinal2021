@@ -53,7 +53,8 @@ class CarritoController {
             return false;
 
         // Buscar si ya hay un compraitem del producto, si hay, modificar cicantidad sumando la nueva cantidad
-        if ( $compraitem = $compraItemController->buscar(['idcompra' => $compra->getIdcompra(), 'idproducto' => $idproducto])[0] ) {
+        if ( $compraitem_arr = $compraItemController->buscar(['idcompra' => $compra->getIdcompra(), 'idproducto' => $idproducto]) ) {
+            $compraitem = $compraitem_arr[0];
             // Se setean los valores para modificar el compraitem
             // Se suman cicantidades
             $param = [];

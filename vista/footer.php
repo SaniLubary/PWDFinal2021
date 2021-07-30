@@ -1,14 +1,27 @@
 <footer class="mt-auto bg-light text-lg-start">
   <?php 
-        if ($user_validado && $_SESSION['url'] != "$PROYECTO/vista/compra.php") {
-          echo "
-          <div class=\"py-4 text-center\">
-            <a role=\"button\" class=\"btn btn-primary btn-lg m-2\" href=\"./comprar.php\">
-              <i class=\"bi bi-cart4\"></i>
-              Ver carrito
-            </a>
-          </div>
-          ";
+        if ($user_validado && $rol !== 1) {
+          // mostrar carrito o boton 'volver' acorde a vista actual
+          if ($_SESSION['url'] !== "$PROYECTO/vista/comprar.php") {
+            echo "
+            <div class=\"py-4 text-center\">
+              <a role=\"button\" class=\"btn btn-primary btn-lg m-2\" href=\"./comprar.php\">
+                <i class=\"bi bi-cart4\"></i>
+                Ver carrito
+              </a>
+            </div>
+            ";
+          } else {
+            echo "
+            <div class=\"py-4 text-center\">
+              <a role=\"button\" class=\"btn btn-primary btn-lg m-2\" href=\"./\">
+                <i class=\"bi bi-arrow-return-left\"></i>
+                Volver
+              </a>
+            </div>
+            ";
+          }
+          
         }
       ?>
 

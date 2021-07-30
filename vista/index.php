@@ -7,6 +7,12 @@ $user_validado = false;
 if ($sessionController->validar())
     $user_validado = true;   
 
+$rol = $sessionController->getRol();
+if ($rol === 1) {
+  header("Location: ./admin.php");
+  exit();
+}
+
 // Setear esta pag como la ultima visitada para las redirecciones con redireccionarUltimaPagina() en utils/funciones.php 
 $_SESSION['url'] = "$PROYECTO/vista/"; 
 
@@ -17,13 +23,25 @@ $productos = $productoController->buscar();
 $carritoController = new CarritoController();
 if ( $user_validado ) {
     if (array_key_exists('producto',$_COOKIE)) {
+      $idproducto = $_COOKIE['producto'];
       // Las cookies 'producto' y 'cicantidad' existen si el user intento comprar antes de ser validado
       // Ahora el user esta validado, El producto se agrega y la cookie se elimina
-      $cicantidad = array_key_exists('cicantidad',$_COOKIE)?array_key_exists('producto',$_COOKIE):1;
-        if ($carritoController->agregarAlCarrito($_COOKIE['producto'], $cicantidad)) {
-            // Se elimina la cookie seteando su fecha de vencimiento en el pasado
-            setcookie("producto", "", time()-10, "/");
-            setcookie("cicantidad", "", time()-10, "/");
+      $cicantidad = array_key_exists('cicantidad',$_COOKIE)?$_COOKIE['cicantidad']:1;
+        if ($carritoController->agregarAlCarrito($idproducto, $cicantidad)) {
+          $card_display = 'block';
+          
+          $mensaje_exito = "
+            <i class=\"bi bi-bookmark-check\"></i> Producto $idproducto agregado al carrito.
+            <a class=\"btn mb-1\" aria-current=\"page\" href=\"./comprar.php\">
+                <i class=\"bi bi-arrow-right-short\"></i>
+                <i class=\"bi bi-cart4\"></i>
+                Ver carrito
+            </a>
+          ";
+
+          // Se elimina la cookie seteando su fecha de vencimiento en el pasado
+          setcookie("producto", "", time()-10, "/");
+          setcookie("cicantidad", "", time()-10, "/");
         }
     }
 }
@@ -65,10 +83,11 @@ if ( $user_validado ) {
                 ";
             }
         ?>
-        <div id="mensajes_operaciones" class="alert alert-success" style="display: none;" role="alert">
+        <div id="mensajes_operaciones" class="alert alert-success" style="display: <?= isset($card_display)?$card_display:'none'?>;" role="alert">
           <!-- Se injecta un mensaje desde el js -->
+          <?php if (isset($mensaje_exito)) echo $mensaje_exito; ?>
         </div>
-
+        
         <?php 
           // Productos disponibles
           $row_actual_tarjetas = 0;
@@ -139,7 +158,6 @@ function crearTarjeta($producto, $user_validado) {
                 $opciones_select
             </select>
             <input placeholder=\"Escriba una cantidad (de $stock)\" id=\"$id-cantidad-input\" type=\"number\" min=\"0\" max=\"$stock\" class=\"form-input form-input-sm mt-3 mb-3 custom-input cantidad-input\">
-            <a onclick=\"comprar($id, $user_validado)\" class=\"btn btn-primary\">Comprar</a>
             <a onclick=\"agregarAlCarrito($id, $user_validado)\" class=\"btn btn-primary\"><i class=\"bi bi-cart4\"></i> Agregar</a>
             </div>
         </div>

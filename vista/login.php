@@ -3,21 +3,11 @@ include "../configuration.php";
 
 $sessionController = new SessionController();
 
+$user_validado = false; // se setea para que se inicie el header correspondiente a usuario no validado
+
 // Si el usuario ya tiene sesion activa, se redirecciona
 if ($sessionController->validar())
     redireccionarUltimaPagina();
-
-$user_validado = false;
-
-if (isset($_POST['usnombre']) && isset($_POST['uspass'])) {
-    $usuarioController = new UsuarioController();
-    if ($usuarioController->alta($_POST)) {
-        if ($sessionController->iniciar($_POST['usnombre'], $_POST['uspass']))
-            $_SESSION['error'] = '';
-            redireccionarUltimaPagina();
-    }
-    else echo 'Hubo un error en su registro.';
-}
 
 ?>
 
@@ -51,7 +41,7 @@ if (isset($_POST['usnombre']) && isset($_POST['uspass'])) {
             }
         ?>
         
-        <form id="form_login" action="./requests.php" method="POST">
+        <form id="form_login" action="./requests.php" method="POST" onsubmit="formOnSubmit()">
             Usuario: <input class="form-control" type="text" name="usnombre" required><br>
             Contrase&ntilde;a: <input class="form-control" type="password" id="uspass" name="uspass" required><br>
             <input class="form-control" type="submit" value="Enviar" onclick="(e) => submitLoginRegister(e)">

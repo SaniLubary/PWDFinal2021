@@ -127,10 +127,22 @@ CREATE TABLE `menurol` (
 
 CREATE TABLE `producto` (
   `idproducto` bigint(20) NOT NULL,
-  `pronombre` int(11) NOT NULL,
+  `pronombre` varchar(50) NOT NULL,
   `prodetalle` varchar(512) NOT NULL,
   `procantstock` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `compraestadotipo`
+--
+
+INSERT INTO `producto` (`idproducto`, `pronombre`, `prodetalle`, `procantstock`) VALUES
+(1, 'Eabaal', 'Es un cuadro copado.', 3),
+(2, 'Nema', 'Este cuadro me re costo.', 5),
+(3, 'Bartus', 'Mi perro se paro en este, lo que la hace la pintura mas valiosa.', 23),
+(4, 'Minberudbathym', 'Este no se que paso.', 1),
+(5, 'Lokriy', 'Uno de los mas infravalorados.', 12),
+(6, 'Nigary', 'Prueba de Concepto.', 1);
 
 -- --------------------------------------------------------
 
@@ -142,6 +154,14 @@ CREATE TABLE `rol` (
   `idrol` bigint(20) NOT NULL,
   `rodescripcion` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `rol`
+--
+
+INSERT INTO `rol` (`idrol`, `rodescripcion`) VALUES
+(1, 'admin'),
+(2, 'cliente');
 
 -- --------------------------------------------------------
 
@@ -157,6 +177,13 @@ CREATE TABLE `usuario` (
   `usdeshabilitado` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `rol`
+--
+
+INSERT INTO `usuario` (`idusuario`, `usnombre`, `uspass`, `usmail`) VALUES
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@admin');
+
 -- --------------------------------------------------------
 
 --
@@ -167,6 +194,14 @@ CREATE TABLE `usuariorol` (
   `idusuario` bigint(20) NOT NULL,
   `idrol` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `usuariorol`
+--
+
+INSERT INTO `usuariorol` (`idusuario`, `idrol`) VALUES
+(1, 1);
+
 
 --
 -- Índices para tablas volcadas

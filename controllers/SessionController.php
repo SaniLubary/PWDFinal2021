@@ -37,8 +37,8 @@ class SessionController {
 
         $usuarioController = new UsuarioController();
 
-        if (!$usuarioController->buscar($_SESSION)[0])
-            return false;
+        if ($usuario_arr = $usuarioController->buscar($_SESSION))
+            if (count($usuario_arr) < 1) return false;
 
         return true;
     }
@@ -55,12 +55,15 @@ class SessionController {
      * Obtiene el usuario de la sesion activa
      */
     public function getUsuario(){
+        if (!$this->validar()) return false;
+        
         $usuarioController=new UsuarioController();
         
-        $where =['usnombre'=>$_SESSION['usnombre'],'idusuario'=>$_SESSION['idusuario']];
-        $usuario=$usuarioController->buscar($where)[0];
-
-        return $usuario;
+        $where = ['usnombre'=>$_SESSION['usnombre'],'idusuario'=>$_SESSION['idusuario']];
+        $usuario_arr =$usuarioController->buscar($where);
+        if (count($usuario_arr) < 1) return false;
+        
+        return $usuario_arr[0];
     }
     
     /**
@@ -69,7 +72,13 @@ class SessionController {
     public function getRol(){
         $usuarioRolController =new UsuarioRolController();
         
-        return $usuarioRolController->buscar(['idusuario' => $this->getUsuario()->getIdusuario])[0]; 
+        if ($usuario = $this->getUsuario()) {
+            $usuarioRol_arr = $usuarioRolController->buscar(['idusuario' => $usuario->getIdusuario()]);
+            if (count($usuarioRol_arr) > 0) 
+                return $usuarioRol_arr[0]->getIdRol(); 
+            }
+        
+        return false;
     }
     
     public function cerrar(){

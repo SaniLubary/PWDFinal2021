@@ -19,14 +19,12 @@ class CompraItemController {
      * @return object
      */
     private function cargarObjetoConClave($param){
-        $obj = null;
-        
         if( isset($param['idcompraitem']) ){
             $obj = new CompraItem();
             $obj->setear($param['idcompraitem'],null, null, null);
-            $obj->cargar();
+            if ($obj->cargar()) return $obj;
         }
-        return $obj;
+        return null;
     }
     
     
@@ -60,7 +58,6 @@ class CompraItemController {
      * @return boolean
      */
     public function baja($param){
-        
         $resp = false;
         
         if ($this->seteadosCamposClaves($param)){

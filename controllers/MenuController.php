@@ -7,12 +7,13 @@ class MenuController {
     private function cargarObjeto($param){
         $obj = null;
            
-        if( array_key_exists('idmenu',$param) && array_key_exists('menombre',$param) && array_key_exists('medescripcion',$param) && array_key_exists('medeshabilitado',$param)){
+        if( array_key_exists('idmenu',$param) && array_key_exists('menombre',$param) && array_key_exists('medescripcion',$param)
+                && array_key_exists('idpadre',$param) && array_key_exists('medeshabilitado',$param)){
             $obj = new Menu();
             if(isset($param['medeshabilitado']))
                 $param['medeshabilitado'] = date("Y-m-d H:i:s");
 
-            $obj->setear($param['idmenu'], $param['menombre'],$param['medescripcion'],$param['medeshabilitado']); 
+            $obj->setear($param['idmenu'], $param['menombre'],$param['medescripcion'],$param['idpadre'],$param['medeshabilitado']); 
         }
         return $obj;
     }
@@ -92,9 +93,10 @@ class MenuController {
     
     /**
      * @param array $param
-     * @return boolean
+     * @param int $idrol si se deesea buscar todos los menues para un rol especifico
+     * @return array<Menu>
      */
-    public function buscar($param){
+    public function buscar($param = [], $idrol = null){
         $where = " true ";
         if ($param<>NULL){
             if  (isset($param['idmenu']))
@@ -107,7 +109,7 @@ class MenuController {
                  $where.=" and medeshabilitado ='".$param['medeshabilitado']."'";
         }
 
-        $arreglo = Menu::listar($where);  
+        $arreglo = Menu::listar($where, $idrol);  
         return $arreglo;  
     }
    

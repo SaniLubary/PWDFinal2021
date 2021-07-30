@@ -77,7 +77,6 @@ class CompraItem {
         $sql="SELECT * FROM compraitem WHERE idcompraitem = ".$this->getIdcompraitem();
         
         if (!$base->Iniciar() or $base->Ejecutar($sql) < 1) {
-            $this->setMensajeoperacion("CompraItem->cargar: ".$base->getError()[2]);
             return false;
         }
         

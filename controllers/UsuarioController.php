@@ -3,7 +3,7 @@
 class UsuarioController {
     /**
      * @param array Donde ['nombre-columna' => 'valor']
-     * @return object
+     * @return <Usuario>
      */
     public function cargarObjeto($param){
         if(array_key_exists('idusuario',$param) && array_key_exists('usnombre',$param) && array_key_exists('uspass',$param) && array_key_exists('usmail',$param)){
@@ -19,14 +19,12 @@ class UsuarioController {
      * @return object
      */
     private function cargarObjetoConClave($param){
-        $obj = null;
-        
         if( isset($param['idusuario']) ){
             $obj = new Usuario();
             $obj->setear($param['idusuario'],null, null, null, null);
-            $obj->cargar();
+            if ($obj->cargar()) return $obj;
         }
-        return $obj;
+        return null;
     }
     
     
@@ -42,14 +40,25 @@ class UsuarioController {
     }
     
     /**
+     * Se da de alta el usuario con rol default 'cliente'
+     * Si se desea ingresar como administrador, debera crear un usuario con nombre 'admin' y automaticamente sera admin
      * @param array $param
      */
     public function alta($param){
-        $usuario = new Usuario();
+        $return = false;
         $param['idusuario'] = null;
         $usuario = $this->cargarObjeto($param);
 
         if (!$usuario or !$usuario->insertar()){
+            return false;
+        }
+
+        $usuarioRolController = new UsuarioRolController();
+
+        // Se da rol 'cliente' (2) en cada nuevo registro automaticamente
+        if (!$usuarioRolController->alta(['idusuario' => $usuario->getIdusuario(), 'idrol' => 2])) {
+            // Si hay un error otorgando rol, se da de baja el usuario creado
+            $this->baja(['idusuario' => $usuario->getIdusuario()]);
             return false;
         }
         

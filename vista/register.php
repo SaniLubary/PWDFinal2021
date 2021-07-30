@@ -47,7 +47,7 @@ if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass
         <!-- Se incluye el header -->
         <?php include './header.php'; ?>
 
-        <form id="form_register" action="#" method="POST">
+        <form id="form_register" action="#" method="POST" enctype="multipart/form-data" onsubmit="formOnSubmit()">
             Usuario: <input class="form-control" type="text" name="usnombre" required><br>
             Mail: <input class="form-control" type="email" name="usmail" required><br>
             Contrase&ntilde;a: <input class="form-control" type="password" id="uspass" name="uspass" required><br>

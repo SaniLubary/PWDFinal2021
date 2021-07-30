@@ -50,12 +50,20 @@ async function agregarAlCarrito(idproducto, user_validado) {
     let cicantidad = getCicantidad(idproducto);
     
     // Si no se escribio un valor correcto, no continua
-    if ( !isNaN(cicantidad) && user_validado ) {
+    if ( cicantidad!=null && !isNaN(cicantidad) && user_validado ) {
         fetch(`./requests.php?idproducto=${idproducto}&cicantidad=${cicantidad}`)
             .then(response => response.json())
             .then(data => {
                 if (data.response == true) {
-                    document.getElementById('mensajes_operaciones').innerHTML = `<i class="bi bi-bookmark-check"></i> Producto ${idproducto} agregado al carrito.`
+                    document.getElementById('mensajes_operaciones').innerHTML = `
+                    <i class="bi bi-bookmark-check"></i> Producto ${idproducto} agregado al carrito.
+                    <a class="btn mb-1" aria-current="page" href="./comprar.php">
+                        <i class="bi bi-arrow-right-short"></i>
+                        <i class="bi bi-cart4"></i>
+                        Ver carrito
+                    </a>
+                    `;
+
                     document.getElementById('mensajes_operaciones').style.display = 'block'
                     window.location.replace("#main-title");
                 } else {
@@ -65,24 +73,17 @@ async function agregarAlCarrito(idproducto, user_validado) {
             .catch(error => {
                 console.error('Ocurrio un problema en la llamada ajax:', error);
             });
-    } else if ( cicantidad && !user_validado) {
+    } else if ( cicantidad!=null && cicantidad && !user_validado) {
         // Si el usuario no esta validado, el producto seleccionado se guarda en cookies.
         // Para cuando el usuario se identifique, la pagina podra saber el producto 
         //  seleccionado previo a la validacion, y agregarlo al carrito.
         document.cookie =`producto=${idproducto}; path=/`
         document.cookie =`cicantidad=${cicantidad}; path=/`
         window.location.replace("./login.php");
+        return false
     } else if (cicantidad == null) {
         return false;
     }
-}
-
-/**
- * Llama a 'agregar al carrito' pero redirije a la pagina de confirmar compra a la vez
- */
-async function comprar(idproducto, user_validado) {
-    agregarAlCarrito(idproducto, user_validado);
-    window.location.replace("./comprar.php");
 }
 
 /**
@@ -91,7 +92,7 @@ async function comprar(idproducto, user_validado) {
  * @param {event} e Obj event del boton submit
  * @returns 
  */
-function submitLoginRegister(e) {
+function submit(e) {
     var t = evt.target;
     let form_correcto = true
     
@@ -117,6 +118,16 @@ function submitLoginRegister(e) {
     // Se completa la accion del boton 'submit'
     t.dispatchEvent( evt )
     return false
+}
+
+function formOnSubmit() {
+    // Se oculta el formuilario y se muestra un mensaje de 'Cargando'
+    let form = document.querySelector('form');
+    // Se oculta el formuilario y se muestra un mensaje de 'Cargando'
+    form.style.display = 'none'
+    document.getElementById('cargando').style.display = 'block'
+    document.getElementById("uspass").value = hex_md5(document.getElementById("uspass").value)
+    return true
 }
 
 function pagar() {
@@ -185,15 +196,17 @@ function getCicantidad(idproducto) {
 /**
  * Quita un producto del carrito de compras de la persona
  * @param {Number} idcompraitem Id compraitem en el 
- * @param {Number} cicantidad Id producto a agregar
+ * @param {Number} idproducto Id producto a agregar
  */
-function quitarDelCarrito(idproducto, idcompraitem, cicantidad = 1) {
+function quitarDelCarrito(idproducto, idcompraitem) {
+    cicantidad = getCicantidad(idproducto);
+
     if ( !isNaN(idproducto) && !isNaN(cicantidad)) {
         fetch(`./requests.php?quitar=true&idcompraitem=${idcompraitem}&cicantidad=${cicantidad}`)
             .then(response => response.json())
             .then(data => {
                 if (data.response == true) {
-                    alert('Producto quitado del carrito.')
+                    window.location.replace("./comprar.php");
                 } else {
                     alert('Se produjo un error.')
                 }

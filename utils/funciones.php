@@ -21,6 +21,16 @@ function redireccionarUltimaPagina() {
     exit();
 }
 
+function utf8_converter($array, $json)
+{
+    array_walk_recursive($array, function (&$item) {
+        $item = utf8_encode($item);
+    });
+    
+    if ($json === true) return json_encode($array);
+    return $array;
+}
+
 spl_autoload_register(function ($class_name) {
     global $ROOT; // seteada en configuracion.php
     

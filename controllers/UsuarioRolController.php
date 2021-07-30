@@ -73,7 +73,7 @@ class UsuarioRolController {
     
     /**
      * @param array $param
-     * @return boolean
+     * @return array<UsuarioRol>
      */
     public function buscar($param){
         $where = " true ";

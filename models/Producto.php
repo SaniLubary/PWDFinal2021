@@ -5,6 +5,7 @@ class Producto {
     private $prodetalle;
     private $procantstock;
     private $cicantidad; // se setea cuando se realiza la busqueda en listarProductosDeCompra() para saber cuantos de cada producto agrego una persona a su carro
+    private $idcompraitem; // se setea cuando se realiza la busqueda en listarProductosDeCompra() para saber que idcompraitem dar de baja cunado se quiere quitar un producto del carrito
     private $mensajeoperacion;
     
     public function getIdproducto()
@@ -57,6 +58,15 @@ class Producto {
         return $this->cicantidad;
     }
 
+    public function setIdcompraitem($idcompraitem)
+    {
+        $this->idcompraitem = $idcompraitem;
+    }
+
+    public function getIdcompraitem()
+    {
+        return $this->idcompraitem;
+    }
 
     public function getMensajeoperacion()
     {
@@ -74,15 +84,15 @@ class Producto {
          $this->prodetalle="" ;
          $this->procantstock="";
          $this->mensajeoperacion ="";
-        
      }
 
-     public function setear($idproducto, $pronombre, $prodetalle, $procantstock, $cicantidad=null)    {
+     public function setear($idproducto, $pronombre, $prodetalle, $procantstock, $cicantidad=null, $idcompraitem=null)    {
         $this->setIdproducto($idproducto);
         $this->setPronombre($pronombre);
         $this->setProdetalle($prodetalle);
         $this->setProcantstock($procantstock);
         $this->setCicantidad($cicantidad);
+        $this->setIdcompraitem($idcompraitem);
     }
     
     
@@ -185,7 +195,7 @@ class Producto {
 
         // No se puede realizar una busqueda sin un id especifico
         if ($idcompra !== null) {
-            $sql="SELECT c2.cicantidad , p.*
+            $sql="SELECT c2.cicantidad, c2.idcompraitem , p.*
                 from producto p 
                 inner join compraitem c2  on c2.idproducto = p.idproducto 
                 inner join compra c on c.idcompra = c2.idcompra 
@@ -198,7 +208,7 @@ class Producto {
                     
                     while ($row = $base->Registro()){
                         $obj = new Producto();
-                        $obj->setear($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['procantstock'], $row['cicantidad']); 
+                        $obj->setear($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['procantstock'], $row['cicantidad'], $row['idcompraitem']); 
                         array_push($arreglo, $obj);
                     }
                     
