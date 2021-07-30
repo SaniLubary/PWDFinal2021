@@ -84,5 +84,6 @@ $productos = $productoController->buscar();
   
   <script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="./js/index.js"></script>
+  <script type="text/javascript" src="./js/admin.js"></script>
 </body>
 </html>

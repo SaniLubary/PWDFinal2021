@@ -7,6 +7,55 @@ include '../configuration.php';
 $sessionController = new SessionController();
 
 /**
+ * Actualiza un elemento Menu
+ */
+if ($_GET && isset($_GET['update']) && $_GET['update'] == "true" 
+        && isset($_GET['idmenu']) && $_GET['idmenu'] != (null || "") 
+        && isset($_GET['menombre']) && $_GET['menombre'] != (null || "") 
+        && isset($_GET['medescripcion']) && $_GET['medescripcion'] != (null || "") 
+        && isset($_GET['idpadre'])
+        && isset($_GET['medeshabilitado']) ) {
+
+    $menuController = new MenuController();
+    $menuController->modificacion($_GET);
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+/**
+ * Crea un elemento Menu
+ */
+if ($_GET && isset($_GET['create']) && $_GET['create'] == "true" 
+        && isset($_GET['menombre']) && $_GET['menombre'] != (null || "") 
+        && isset($_GET['medescripcion']) && $_GET['medescripcion'] != (null || "") 
+        && isset($_GET['idpadre'])
+        && isset($_GET['medeshabilitado']) ) {
+
+    $menuController = new MenuController();
+    if (!$menuController->alta($_GET)) {
+        print json_encode(['response' => false]);
+        exit();
+    }
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+/**
+ * Actualiza un elemento Menu
+ */
+if ($_GET && isset($_GET['delete']) && $_GET['delete'] == "true" 
+        && isset($_GET['idmenu']) && $_GET['idmenu'] != (null || "") ) {
+
+    $menuController = new MenuController();
+    $menuController->baja($_GET);
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+/**
  * Agrega productos al carro desde una llamada ajax
  */
 if ($_GET && isset($_GET['idproducto']) && $_GET['idproducto'] !== (null || "") 

@@ -2,7 +2,7 @@
 class MenuController {
     /**
      * @param array Donde ['nombre-columna' => 'valor']
-     * @return Tabla
+     * @return Menu
      */
     private function cargarObjeto($param){
         $obj = null;
@@ -10,9 +10,11 @@ class MenuController {
         if( array_key_exists('idmenu',$param) && array_key_exists('menombre',$param) && array_key_exists('medescripcion',$param)
                 && array_key_exists('idpadre',$param) && array_key_exists('medeshabilitado',$param)){
             $obj = new Menu();
-            if(isset($param['medeshabilitado']))
-                $param['medeshabilitado'] = date("Y-m-d H:i:s");
 
+            if(isset($param['medeshabilitado']) && $param['medeshabilitado'] == 'true') {
+                $param['medeshabilitado'] = date("Y-m-d H:i:s"); // me aseguro de que se pase el tipo de dato de forma correcta, ignorando la fecha real pasada
+            } else $param['medeshabilitado'] = null;
+            
             $obj->setear($param['idmenu'], $param['menombre'],$param['medescripcion'],$param['idpadre'],$param['medeshabilitado']); 
         }
         return $obj;
@@ -20,7 +22,7 @@ class MenuController {
     
     /**
      * @param array $param
-     * @return Tabla
+     * @return Menu
      */
     private function cargarObjetoConClave($param){
         $obj = null;
@@ -83,8 +85,8 @@ class MenuController {
        
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
-            $elObjtMenu = $this->cargarObjeto($param);
-            if($elObjtMenu!=null && $elObjtMenu->modificar()){
+            $menu = $this->cargarObjeto($param);
+            if($menu!=null && $menu->modificar()){
                 $resp = true;
             }
         }

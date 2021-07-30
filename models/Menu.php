@@ -127,8 +127,19 @@ class Menu {
     public function modificar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="UPDATE menu SET menombre='".$this->getMenombre()."',medescripcion='".$this->getMedescripcion()."',
-            idpadre='".$this->getIdpadre()."', medeshabilitado='".$this->getMedeshabilitado()."' ";
+
+        $idpadre = $this->getIdpadre();
+        if ( $idpadre !== ('' or null) && is_numeric($idpadre)) {
+            $sql_idpadre = ", idpadre='$idpadre'";
+        } else $sql_idpadre = '';
+        
+        $medeshabilitado = $this->getMedeshabilitado();
+        if ( $medeshabilitado != "" and $medeshabilitado != null and $medeshabilitado != false) {
+            $sql_medeshabilitado = ", medeshabilitado='$medeshabilitado'";
+        } else $sql_medeshabilitado = ', medeshabilitado= NULL';
+        
+        $sql="UPDATE menu SET menombre='".$this->getMenombre()."',medescripcion='".$this->getMedescripcion()."'
+            $sql_idpadre $sql_medeshabilitado ";
         $sql.= " WHERE idmenu = ".$this->getIdmenu();
 
         if ($base->Iniciar()) {
