@@ -30,7 +30,7 @@ $rol = $sessionController->getRol();
 // Si estamos haciendo un request a requests.php, no queremos redirecciones raras
 if (!strpos( $_SERVER['REQUEST_URI'], 'requests.php' )) {
   // admin no compra, se obliga a redirigir a ./admin.php
-  if ($rol === 1 && !strpos( $_SERVER['REQUEST_URI'], 'admin.php' ) ) {
+  if ($rol === 1 && !strpos( $_SERVER['REQUEST_URI'], 'admin' ) ) {
     header("Location: ./admin.php");
     exit();
   }

@@ -3,7 +3,7 @@
 class CarritoController {
     
     /**
-     * Devuelve los items del carrito de compras para todas las compras activas de un usuario con sesion iniciada
+     * Devuelve los items del carrito de compras para todas las compras activas sin un estado (iniciada, cancelada, etc) de un usuario con sesion iniciada
      * @return array<Compra>(array<CompraItem>) Array de CompraItems por cada compra activa
      */
     function verCarrito() {
@@ -13,15 +13,16 @@ class CarritoController {
 
         // Check pedidos de compra en estado 'iniciada'
         $compraController = new CompraController();
-        if ($compras = $compraController->buscar(['idusuario' => $_SESSION['idusuario']])) {
+        $compras = $compraController->buscarSinEstado();
+        if (!empty($compras)) {
             // Check productos agregados al pedido de compra
-            $compras_activas = [];
+            $carrito = [];
             foreach ($compras as $compra) {
                 if ( $productos = $compraController->listarProductosDeCompra($compra->getIdcompra()) ) {
-                    array_push($compras_activas, [ 'compra' => $compra, 'productos' => $productos]);
+                    array_push($carrito, [ 'compra' => $compra, 'productos' => $productos]);
                 }
             }
-            return $compras_activas;
+            return $carrito;
         }
     
         // No se encontraron compras activas
@@ -36,16 +37,15 @@ class CarritoController {
      * @return bool 
      */
     function agregarAlCarrito($idproducto, $cicantidad) {
-        $compras_activas = $this->verCarrito();
+        $carrito = $this->verCarrito();
         // Si no se encontraron compras activas, crear una
-        if (count($compras_activas) === 0) {
+        if (count($carrito) === 0) {
             $compraController = new CompraController();
-            $compraEstadoController = new CompraEstadoController();
             
             if (!$compra = $compraController->alta(['idusuario' => $_SESSION['idusuario']])) {
                 $compra = null;
             }
-        } else $compra = $compras_activas[0]['compra'];
+        } else $compra = $carrito[0]['compra'];
         
         $compraItemController = new CompraItemController();
 

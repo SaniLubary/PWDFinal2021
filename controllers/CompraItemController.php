@@ -16,7 +16,7 @@ class CompraItemController {
     
     /**
      * @param array Donde ['idcompraitem' => $idcompraitem]
-     * @return object
+     * @return null|object<CompraItem>
      */
     private function cargarObjetoConClave($param){
         if( isset($param['idcompraitem']) ){

@@ -46,7 +46,8 @@ class CompraEstadoController {
      */
     public function alta($param){
         $param['idcompraestado'] = null;
-        $param['cefechaini'] = null;
+        $param['idcompraestadotipo'] = isset($param['idcompraestadotipo'])?$param['idcompraestadotipo']:1;
+        $param['cefechaini'] = date("Y-m-d H:i:s");
         $param['cefechafin'] = null;
         $compraEstado = $this->cargarObjeto($param);
 
@@ -94,9 +95,9 @@ class CompraEstadoController {
     
     /**
      * @param array $param
-     * @return boolean
+     * @return array<CompraEstado>
      */
-    public function buscar($param){
+    public function buscar($param, $order_by_estado = false){
         $where = " true ";
         if ($param<>NULL){
             if  (isset($param['idcompraestado']))
@@ -111,9 +112,56 @@ class CompraEstadoController {
                 $where.=" and cafechafin ='".$param['cafechafin']."'";
         }
         
-        $arreglo = compraEstado::listar($where);
+        $arreglo = CompraEstado::listar($where, $order_by_estado);
         
         return $arreglo;
     }
+
+    /**
+     * Aumenta el estado de una compra, creando un estado nuevo y seteando fechafin para el estado anterior
+     * @return bool True si se aumento el estado, False si no es posible aumentar estado (compra ya se encuentra en estado 3) 
+     */
+    public function aumentarEstado($idcompra) {
+        // Se busca el ultimo estado, para actualizar cofechafin
+        $estado_anterior = $this->buscar(['idcompra' => $idcompra], true);
+        if (!empty($estado_anterior)) {
+            $estado_anterior = $estado_anterior[0];
+            // Si el ultimo estado de la compra es 3 (enviada), no se agrega un nuevo estado
+            if ($estado_anterior->getIdcompraestadotipo() === 3) {
+                return false;
+            } else {
+                $estado_anterior->setCefechafin(date("Y-m-d H:i:s"));
+                $estado_anterior->modificar();
+            }
+
+            // Agregamos nuevo estado con id mayor
+            $this->alta(['idcompra' => $idcompra, 'idcompraestadotipo' => $estado_anterior->getIdcompraestadotipo()+1]);
+            return true;
+        } else {
+            // Agregamos estado inicial
+            $this->alta(['idcompra' => $idcompra]);
+            return true;
+        }
+    }
+
+    /**
+     * Crea un Estado de Tipo Cancelado para la Compra, actualiza fechafin del ultimo estado
+     * @return bool
+     */
+    public function estadoCancelado($idcompra) {
+        // Se busca el ultimo estado, para actualizar cofechafin
+        $estado_anterior = $this->buscar(['idcompra' => $idcompra], true);
+        if (!empty($estado_anterior)) {
+            $estado_anterior = $estado_anterior[0];
+            $estado_anterior->setCefechafin(date("Y-m-d H:i:s"));
+            $estado_anterior->modificar();
+        } 
+
+        // Agregamos nuevo estado con id 4 (compra cancelada)
+        if ( $this->alta(['idcompra' => $idcompra, 'idcompraestadotipo' => 4]) ) {
+            return true;
+        } else return false;
+    }
 }
+
 ?>

@@ -8,6 +8,7 @@ class CompraController {
         $compra = null;
         if ( array_key_exists('idcompra',$param) and array_key_exists('cofecha', $param) and array_key_exists('idusuario',$param) ) {
             $compra = new Compra();
+            $param['cofecha'] = date("Y-m-d H:i:s");
             $compra->setear($param['idcompra'], $param['cofecha'], $param['idusuario']);
         }
         
@@ -93,9 +94,9 @@ class CompraController {
         }
         
         $compra= new Compra();
-        $arr = $compra->listar($where, $porEstado);
+        $compras = $compra->listar($where, $porEstado);
         
-        return $arr;
+        return $compras;
     }
 
     /**
@@ -104,10 +105,23 @@ class CompraController {
      */
     public function listarProductosDeCompra($idcompra){
         
-        $arreglo = Producto::listarProductosDeCompra($idcompra);
+        $productos = Producto::listarProductosDeCompra($idcompra);
         
-        return $arreglo;
+        return $productos;
     }
+    
+    /**
+     * @param int $param
+     * @return array<Compra>
+     */
+    public function buscarSinEstado(){
+        
+        $compra= new Compra();
+        $compras = $compra->listarSinEstado(); 
+
+        return $compras;
+    }
+
     
 }
 ?>

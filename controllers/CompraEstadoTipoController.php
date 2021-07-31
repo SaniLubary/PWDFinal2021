@@ -1,5 +1,5 @@
 <?php
-class CompraEstadoController {
+class CompraEstadoTipoController {
     /**
      * @param array Donde ['nombre-columna' => 'valor']
      * @return object
@@ -7,7 +7,7 @@ class CompraEstadoController {
     private function cargarObjeto($param){
         $compra = null;
         if ( isset($param['idcompraestadotipo']) && isset($param['catdescripcion']) && isset($param['catdetalle'])) {
-            $compra = new Compra();
+            $compra = new CompraEstadoTipo();
             $compra->setear($param['idcompraestadotipo'], $param['catdescripcion'], $param['catdetalle']);
         }
         
@@ -44,9 +44,9 @@ class CompraEstadoController {
     public function baja($param){
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
-            $compra = $this->cargarObjeto($param);
+            $compraEstadoTipo = $this->cargarObjeto($param);
             
-            if ($compra !=null and $compra->eliminar()){
+            if ($compraEstadoTipo !=null and $compraEstadoTipo->eliminar()){
                 $resp = true;
             }
         }
@@ -61,9 +61,9 @@ class CompraEstadoController {
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
             
-            $compra = $this->cargarObjeto($param);
+            $compraEstadoTipo = $this->cargarObjeto($param);
             
-            if($compra !=null and $compra->modificar()){
+            if($compraEstadoTipo !=null and $compraEstadoTipo->modificar()){
                 $resp = true;
                 
             }
@@ -73,7 +73,7 @@ class CompraEstadoController {
     
     /**
      * @param array $param
-     * @return boolean
+     * @return array<CompraEstadoTipo>
      */
     public function buscar($param){
         $where = " true ";
@@ -86,8 +86,8 @@ class CompraEstadoController {
                 $where.=" and catdescripcion ='".$param['catdescripcion']."'";
         }
         
-        $compra= new Compra();
-        $arr = $compra->listar($where, "");
+        $compraEstadoTipo = new CompraEstadoTipo();
+        $arr = $compraEstadoTipo->listar($where, "");
         return $arr;
         
     }

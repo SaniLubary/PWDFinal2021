@@ -92,7 +92,7 @@ function getAccion($nombre) {
     case 'Historial de Compras':
       return 'href="./historial.php"';
     case 'Compras':
-      return 'href="./compras.php"';
+      return 'href="./admin_compras.php"';
     default:
       return 'href="./"';
   }

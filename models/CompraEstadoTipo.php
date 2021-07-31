@@ -70,7 +70,7 @@ class CompraEstadoTipo {
         
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
-            $this->setear($row['idcompraestadotipo'], $row['cetdescripcion'], $row['idcompra'], $row['cetdetalle']); 
+            $this->setear($row['idcompraestadotipo'], $row['cetdescripcion'], $row['cetdetalle']); 
         }
 
         return true;
@@ -140,7 +140,7 @@ class CompraEstadoTipo {
             if($res>0){
                 while ($row = $base->Registro()){
                     $obj = new CompraEstadoTipo();
-                    $obj->setear($row['idcompraestadotipo'], $row['cetdescripcion'], $row['idcompra'], $row['cetdetalle']); 
+                    $obj->setear($row['idcompraestadotipo'], $row['cetdescripcion'], $row['cetdetalle']); 
                     array_push($arreglo, $obj);
                 }
             }

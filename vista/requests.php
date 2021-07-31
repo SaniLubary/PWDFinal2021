@@ -7,6 +7,39 @@ include '../configuration.php';
 $sessionController = new SessionController();
 
 /**
+ * Aumenta el estado de una compra creando un nuevo estado con idestado mayor, y seteando fechafin en el estado anterior
+ */
+if ($_GET && isset($_GET['aumentar-estado']) && $_GET['aumentar-estado'] == "true" 
+        && isset($_GET['idcompra']) && $_GET['idcompra'] != (null || "") ) {
+    
+    $compraEstadoController = new CompraEstadoController();
+    if (!$compraEstadoController->aumentarEstado($_GET['idcompra'])) {
+        print json_encode(['response' => false]);
+        exit();
+    }
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+/**
+ * Cancela una compra creando un estado 'cancelado'
+ */
+if ($_GET && isset($_GET['cancelar-compra']) && $_GET['cancelar-compra'] == "true" 
+        && isset($_GET['idcompra']) && $_GET['idcompra'] != (null || "") ) {
+    
+    $compraEstadoController = new CompraEstadoController();
+    if (!$compraEstadoController->estadoCancelado($_GET['idcompra'])) {
+        print json_encode(['response' => false]);
+        exit();
+    }
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+
+/**
  * Actualiza un elemento Menu
  */
 if ($_GET && isset($_GET['update']) && $_GET['update'] == "true" 
@@ -43,7 +76,7 @@ if ($_GET && isset($_GET['create']) && $_GET['create'] == "true"
 }
 
 /**
- * Actualiza un elemento Menu
+ * Elimina un elemento Menu
  */
 if ($_GET && isset($_GET['delete']) && $_GET['delete'] == "true" 
         && isset($_GET['idmenu']) && $_GET['idmenu'] != (null || "") ) {
@@ -56,7 +89,7 @@ if ($_GET && isset($_GET['delete']) && $_GET['delete'] == "true"
 }
 
 /**
- * Agrega productos al carro desde una llamada ajax
+ * Agrega productos al carro
  */
 if ($_GET && isset($_GET['idproducto']) && $_GET['idproducto'] !== (null || "") 
         && isset($_GET['cicantidad']) && $_GET['cicantidad'] !== (null || "") ) {
@@ -81,7 +114,7 @@ if ($_GET && isset($_GET['idproducto']) && $_GET['idproducto'] !== (null || "")
 }
 
 /**
- * Quita productos al del carro desde una llamada ajax
+ * Quita productos al del carro
  */
 if ($_GET && isset($_GET['quitar']) && $_GET['quitar'] === 'true' 
         && isset($_GET['idcompraitem']) && $_GET['idcompraitem'] !== (null || "") && is_numeric($_GET['idcompraitem']) 

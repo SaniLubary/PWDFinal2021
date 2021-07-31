@@ -160,7 +160,7 @@ class CompraEstado {
         return $resp;
     }
     
-    public static function listar($condicion=""){
+    public static function listar($condicion="", $order_by_estado = false){
         $arreglo = array();
         $base=new BaseDatos();
         $sql="SELECT * FROM compraestado ";
@@ -168,6 +168,11 @@ class CompraEstado {
         if ($condicion!="") {
             $sql.='WHERE '.$condicion;
         }
+
+        if ($order_by_estado) {
+            $sql .= 'ORDER BY idcompraestadotipo DESC';
+        }
+        
         $res = $base->Ejecutar($sql);
         if($res>-1){
             if($res>0){

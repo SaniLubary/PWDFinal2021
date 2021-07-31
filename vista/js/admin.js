@@ -2,14 +2,49 @@ window.onload = () => {
   var btn_guardar = document.getElementById('btn-guardar')
   var btn_cerrar_modal = document.getElementById('btn-cerrar-modal')
   
-  btn_guardar.onclick = (e) => {
-    if (guardarElemento()) {
-      // si todo bien, se cierra el modal
-      let event = new Event("click");
-      btn_cerrar_modal.dispatchEvent(event)
+  if (btn_guardar) {
+    btn_guardar.onclick = (e) => {
+      if (guardarElemento()) {
+        // si todo bien, se cierra el modal
+        let event = new Event("click");
+        btn_cerrar_modal.dispatchEvent(event)
+      }
     }
   }
+}
 
+function aumentarEstadoDeCompra(id) {
+  fetch('./requests.php?aumentar-estado=true&idcompra='+id)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if (data.response == true) {
+            window.location.reload(true)
+          } else {
+            alert('No se pudo actualizar')
+            return false;
+          }
+        })
+        .catch(error => {
+            console.error('Ocurrio un problema en la llamada ajax:', error);
+        });
+}
+
+function cancelarCompra(id) {
+  fetch('./requests.php?cancelar-compra=true&idcompra='+id)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if (data.response == true) {
+            window.location.reload(true)
+          } else {
+            alert('No se pudo actualizar')
+            return false;
+          }
+        })
+        .catch(error => {
+            console.error('Ocurrio un problema en la llamada ajax:', error);
+        });
 }
 
 function eliminarElemento(id) {

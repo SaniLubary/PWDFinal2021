@@ -117,6 +117,7 @@ class Usuario {
     public function modificar(){
         $base=new BaseDatos();
         $sql="UPDATE usuario SET usnombre='".$this->getUsnombre()."',uspass=".$this->getUspass().",usmail = '".$this->geetUsmail()."',usdeshabilitado = '".$this->getDeshabilitado()."' WHERE id=".$this->getIdusuario();
+        verEstructura($sql);exit();
         if (!$base->Iniciar() or !$base->Ejecutar($sql)) {
             $this->setmensajeoperacion(get_class()."->modificar 2: ".$base->getError());
             return false;

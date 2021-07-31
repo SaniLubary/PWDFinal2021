@@ -113,7 +113,10 @@ function submit(e) {
     // Se oculta el formuilario y se muestra un mensaje de 'Cargando'
     form.style.display = 'none'
     document.getElementById('cargando').style.display = 'block'
-    document.getElementById("uspass").value = hex_md5(document.getElementById("uspass").value)
+    let pass = document.getElementById("uspass").value
+    if (pass !== '' || pass !== null) {
+        pass = hex_md5(document.getElementById("uspass").value)
+    }
 
     // Se completa la accion del boton 'submit'
     t.dispatchEvent( evt )
@@ -126,7 +129,11 @@ function formOnSubmit() {
     // Se oculta el formuilario y se muestra un mensaje de 'Cargando'
     form.style.display = 'none'
     document.getElementById('cargando').style.display = 'block'
-    document.getElementById("uspass").value = hex_md5(document.getElementById("uspass").value)
+    let pass = document.getElementById("uspass").value
+    if (pass !== '' || pass !== null) {
+        pass = hex_md5(document.getElementById("uspass").value)
+    }
+
     return true
 }
 

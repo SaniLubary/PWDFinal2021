@@ -133,7 +133,7 @@ class Compra {
         $base = new BaseDatos();
 
         $sql_base = "SELECT * FROM Compra ";
-        $sql_por_estado = "SELECT c.* FROM compra c INNER JOIN compraestado ce ON ce.idcompra = c.idcompra ";
+        $sql_por_estado = "SELECT * FROM compra c INNER JOIN compraestado ce ON ce.idcompra = c.idcompra ";
         $sql = $porEstado ? $sql_por_estado : $sql_base;
 
         if ($parametro!="") {
@@ -143,6 +143,25 @@ class Compra {
         // para seleccionar el ultimo carrito que se haya creado, en caso de que se cree uno nuevo por alguna razon (???) seleccione el ultimo que se modifico
         $sql .= ' ORDER BY idcompra DESC';
 
+        $res = $base->Ejecutar($sql);
+        if($res>-1){
+            if($res>0){
+                while ($row = $base->Registro()){
+                    $obj = new Compra();
+                    $obj->setear($row['idcompra'], $row['cofecha'], $row['idusuario']); 
+                    array_push($arreglo, $obj);
+                }
+            }
+        } 
+        return $arreglo;
+    }
+
+    public static  function listarSinEstado(){
+        $arreglo = array();
+        $base = new BaseDatos();
+
+        $sql = "SELECT * FROM Compra ";
+       
         $res = $base->Ejecutar($sql);
         if($res>-1){
             if($res>0){

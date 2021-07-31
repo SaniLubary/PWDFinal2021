@@ -89,9 +89,21 @@ class UsuarioController {
      */
     public function modificacion($param){
         $resp = false;
-        if ($this->seteadosCamposClaves($param)){
-            
-            $usuario = $this->cargarObjeto($param);
+        $usuario = $this->cargarObjetoConClave($param);
+        if ($usuario){
+
+            if (isset($param['usnombre']) && $param['usnombre'] !== '') {
+                $usuario->setUsnombre($param['usnombre']);
+            }
+            if (isset($param['usmail']) && $param['usmail'] !== '') {
+                $usuario->setusmail($param['usmail']);
+            }
+            if (isset($param['uspass']) && $param['uspass'] !== '') {
+                $usuario->setUspass($param['uspass']);
+            }
+            if (isset($param['usdeshabilitado']) && $param['usdeshabilitado'] !== '') {
+                $usuario->setDeshabilitado($param['usdeshabilitado']);
+            }
             
             if($usuario !== null and $usuario->modificar()){
                 $resp = true;
