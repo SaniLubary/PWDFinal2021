@@ -85,7 +85,7 @@ class RolController {
     
     /**
      * @param array $param
-     * @return boolean
+     * @return array<Rol>
      */
     public function buscar($param){
         $rol = new Rol();

@@ -1,18 +1,3 @@
-window.onload = () => {
-  var btn_guardar = document.getElementById('btn-guardar')
-  var btn_cerrar_modal = document.getElementById('btn-cerrar-modal')
-  
-  if (btn_guardar) {
-    btn_guardar.onclick = (e) => {
-      if (guardarElemento()) {
-        // si todo bien, se cierra el modal
-        let event = new Event("click");
-        btn_cerrar_modal.dispatchEvent(event)
-      }
-    }
-  }
-}
-
 function aumentarEstadoDeCompra(id) {
   fetch('./requests.php?aumentar-estado=true&idcompra='+id)
         .then(response => response.json())
@@ -47,15 +32,19 @@ function cancelarCompra(id) {
         });
 }
 
-function eliminarElemento(id) {
-  fetch('./requests.php?delete=true&idmenu='+id)
+function eliminarElemento(id, tabla) {
+  fetch(`./requests.php?delete=true&id${tabla}=${id}`)
         .then(response => response.json())
         .then(data => {
           console.log(data);
           if (data.response == true) {
             window.location.reload(true)
           } else {
-            alert('No se pudo eliminar')
+            if (data.response == 1451) {
+              alert('El producto se encuentra en el carro de alguien');
+            } else {
+              alert('No se pudo eliminar')
+            }
             return false;
           }
         })
@@ -64,7 +53,7 @@ function eliminarElemento(id) {
         });
 }
 
-function guardarElemento() {
+function guardarElemento(tabla) {
   let inputs = document.querySelectorAll(`#modal-body > input, #modal-body > select`)
   
   let params = [];
@@ -82,7 +71,7 @@ function guardarElemento() {
 
   let json_params = {...params}
 
-  fetch('./requests.php?create=true&'+ new URLSearchParams(json_params))
+  fetch('./requests.php?create=true&tabla='+tabla+'&'+ new URLSearchParams(json_params))
         .then(response => response.json())
         .then(data => {
           console.log(data);
@@ -102,7 +91,7 @@ function guardarElemento() {
  * Actualiza la info de un elemento en una tabla de elementos
  * @param {string} id id del TR que contiene los inputs de la tabla para el elemento a actualizar 
  */
-function actualizar(id) {
+function actualizar(id, tabla) {
   let inputs = document.querySelectorAll(`#${id} > * > input, #${id} > * > select`)
   
   let params = [];
@@ -120,7 +109,7 @@ function actualizar(id) {
 
   let json_params = {...params}
 
-  fetch('./requests.php?update=true&'+ new URLSearchParams(json_params))
+  fetch('./requests.php?update=true&tabla='+tabla+'&'+ new URLSearchParams(json_params))
         .then(response => response.json())
         .then(data => {
           if (data.response == true) {
@@ -132,3 +121,22 @@ function actualizar(id) {
         });
   
 }
+
+
+function setearRol(id, rol) {
+  fetch(`./requests.php?setrol=true&idusuario=${id}&idrol=${rol}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if (data.response == true) {
+            window.location.reload(true)
+          } else {
+            alert('No se pudo eliminar')
+            return false;
+          }
+        })
+        .catch(error => {
+            console.error('Ocurrio un problema en la llamada ajax:', error);
+        });
+}
+

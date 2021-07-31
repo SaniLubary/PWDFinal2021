@@ -133,7 +133,7 @@ class Producto {
     public function modificar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="UPDATE Producto SET pronombre='".$this->getPronombre()."', prodetalle='".$this->getProdetalle()."'";
+        $sql="UPDATE Producto SET pronombre='".$this->getPronombre()."', prodetalle='".$this->getProdetalle()."', procantstock='".$this->getProcantstock()."'";
         $sql.= " WHERE idproducto = ".$this->getIdproducto();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {

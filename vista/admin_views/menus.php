@@ -78,10 +78,10 @@ foreach ($menus as $menu) {
             <input readonly type="date" value="<?=$medeshabilitado?>" class="form-control">
           <td>
             <!-- Acciones  -->
-            <button class="btn btn-success" onclick="actualizar('tr-<?= $id?>')">
+            <button class="btn btn-success" onclick="actualizar('tr-<?= $id?>','menu')">
             <i class="bi bi-arrow-repeat"></i> Actualizar
             </button>
-            <button class="btn btn-danger" onclick="eliminarElemento(<?= $id?>)">
+            <button class="btn btn-danger" onclick="eliminarElemento(<?= $id?>, 'menu')">
             <i class="bi bi-x-lg"></i> Eliminar
             </button>
           </td>

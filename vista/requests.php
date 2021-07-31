@@ -43,6 +43,7 @@ if ($_GET && isset($_GET['cancelar-compra']) && $_GET['cancelar-compra'] == "tru
  * Actualiza un elemento Menu
  */
 if ($_GET && isset($_GET['update']) && $_GET['update'] == "true" 
+        && isset($_GET['tabla']) && $_GET['tabla'] == "menu"
         && isset($_GET['idmenu']) && $_GET['idmenu'] != (null || "") 
         && isset($_GET['menombre']) && $_GET['menombre'] != (null || "") 
         && isset($_GET['medescripcion']) && $_GET['medescripcion'] != (null || "") 
@@ -57,9 +58,31 @@ if ($_GET && isset($_GET['update']) && $_GET['update'] == "true"
 }
 
 /**
+ * Actualiza un elemento Menu
+ */
+if ($_GET && isset($_GET['update']) && $_GET['update'] == "true" 
+        && isset($_GET['tabla']) && $_GET['tabla'] == "producto"
+        && isset($_GET['idproducto']) && $_GET['idproducto'] != (null || "") 
+        && isset($_GET['pronombre']) && $_GET['pronombre'] != (null || "") 
+        && isset($_GET['prodetalle']) && $_GET['prodetalle'] != (null || "") 
+        && isset($_GET['procantstock']) && $_GET['procantstock'] != (null || "") ) {
+
+    $menuController = new ProductoController();
+    if (!$menuController->modificacion($_GET)) {
+        print json_encode(['response' => false]);
+        exit();
+
+    }
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+/**
  * Crea un elemento Menu
  */
 if ($_GET && isset($_GET['create']) && $_GET['create'] == "true" 
+        && isset($_GET['tabla']) && $_GET['tabla'] == "menu"
         && isset($_GET['menombre']) && $_GET['menombre'] != (null || "") 
         && isset($_GET['medescripcion']) && $_GET['medescripcion'] != (null || "") 
         && isset($_GET['idpadre'])
@@ -76,6 +99,26 @@ if ($_GET && isset($_GET['create']) && $_GET['create'] == "true"
 }
 
 /**
+ * Crea un elemento Producto
+ */
+if ($_GET && isset($_GET['create']) && $_GET['create'] == "true" 
+        && isset($_GET['tabla']) && $_GET['tabla'] == "producto"
+        && isset($_GET['pronombre']) && $_GET['pronombre'] != (null || "") 
+        && isset($_GET['procantstock']) && $_GET['procantstock'] != (null || "") && is_numeric($_GET['procantstock'])
+        && isset($_GET['prodetalle']) && $_GET['prodetalle'] != (null || "") ) {
+
+    $productoController = new ProductoController();
+    if (!$productoController->alta($_GET)) {
+        print json_encode(['response' => false]);
+        exit();
+    }
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+
+/**
  * Elimina un elemento Menu
  */
 if ($_GET && isset($_GET['delete']) && $_GET['delete'] == "true" 
@@ -83,6 +126,43 @@ if ($_GET && isset($_GET['delete']) && $_GET['delete'] == "true"
 
     $menuController = new MenuController();
     $menuController->baja($_GET);
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+/**
+ * Modifica el rol de un usuario
+ */
+if ($_GET && isset($_GET['setrol']) && $_GET['setrol'] == "true" 
+        && isset($_GET['idusuario']) && $_GET['idusuario'] != (null || "")
+        && isset($_GET['idrol']) && $_GET['idrol'] != (null || "") ) {
+
+    $menuController = new UsuarioRolController();
+    if (!$menuController->modificacion($_GET)) {
+        print json_encode(['response' => false]);
+        exit();
+    }
+            
+    print json_encode(['response' => true]);
+    exit();
+}
+
+/**
+ * Elimina un elemento Producto
+ */
+if ($_GET && isset($_GET['delete']) && $_GET['delete'] == "true" 
+        && isset($_GET['idproducto']) && $_GET['idproducto'] != (null || "") ) {
+
+    try {
+        $menuController = new ProductoController();
+        $menuController->baja($_GET);
+    } catch (Exception $e) {
+        if ($e->errorInfo[1] === 1451) {
+            print json_encode(['response' => '1451']);
+            exit();
+        }
+    }
             
     print json_encode(['response' => true]);
     exit();

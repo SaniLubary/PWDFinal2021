@@ -93,7 +93,7 @@ class ProductoController {
     
     /**
      * @param array $param
-     * @return array
+     * @return array<Producto>
      */
     public function buscar($param = null){
         $where = " true ";
