@@ -21,8 +21,9 @@ require $ROOT.'utils/funciones.php';
 // Valida session del user
 $sessionController = new SessionController();
 $user_validado = false;
-if ($sessionController->validar())
-    $user_validado = true;   
+if ($sessionController->validar()) {
+  $user_validado = true;   
+}
 
 $rol = $sessionController->getRol();
 

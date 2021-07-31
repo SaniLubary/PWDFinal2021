@@ -39,10 +39,10 @@ class Usuario {
         $this->uspass = $valor;
     }
 
-    public function geetUsmail(){
+    public function getUsmail(){
         return $this->usmail;
     }
-    public function seetUsmail($valor){
+    public function setUsmail($valor){
         $this->usmail = $valor;
     }
 
@@ -67,7 +67,7 @@ class Usuario {
         $this->setIdusuario($idusuario);
         $this->setUsnombre($usnombre);
         $this->setUspass($uspass);
-        $this->seetUsmail($usmail);
+        $this->setUsmail($usmail);
         $this->setDeshabilitado($usdeshabilitado);
     
     }
@@ -99,7 +99,7 @@ class Usuario {
         $resp = false;
         $base=new BaseDatos();
         
-        $sql="INSERT INTO usuario(usnombre,uspass,usmail,usdeshabilitado)  VALUES('".$this->getUsnombre()."','".$this->getUspass()."','".$this->geetUsmail()."','".$this->getDeshabilitado()."');";
+        $sql="INSERT INTO usuario(usnombre,uspass,usmail,usdeshabilitado)  VALUES('".$this->getUsnombre()."','".$this->getUspass()."','".$this->getUsmail()."','".$this->getDeshabilitado()."');";
         
         if ($base->Iniciar()) {
             if ($elid = $base->Ejecutar($sql)) {
@@ -116,8 +116,7 @@ class Usuario {
     
     public function modificar(){
         $base=new BaseDatos();
-        $sql="UPDATE usuario SET usnombre='".$this->getUsnombre()."',uspass=".$this->getUspass().",usmail = '".$this->geetUsmail()."',usdeshabilitado = '".$this->getDeshabilitado()."' WHERE id=".$this->getIdusuario();
-        verEstructura($sql);exit();
+        $sql="UPDATE usuario SET usnombre='".$this->getUsnombre()."',uspass='".$this->getUspass()."',usmail = '".$this->getUsmail()."',usdeshabilitado = '".$this->getDeshabilitado()."' WHERE idusuario=".$this->getIdusuario();
         if (!$base->Iniciar() or !$base->Ejecutar($sql)) {
             $this->setmensajeoperacion(get_class()."->modificar 2: ".$base->getError());
             return false;

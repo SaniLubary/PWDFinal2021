@@ -32,13 +32,21 @@ class SessionController {
      * Chequea si un usuario existe y tiene las credenciales correctas en la base
      */
     public function validar(){
+        global $PROYECTO;
         if(!isset($_SESSION['idusuario']) && !isset($_SESSION['usnombre']) && !isset($_SESSION['uspass']))
            return false;
 
         $usuarioController = new UsuarioController();
 
-        if ($usuario_arr = $usuarioController->buscar($_SESSION))
-            if (count($usuario_arr) < 1) return false;
+        if ($usuario_arr = $usuarioController->buscar($_SESSION)) {
+            if (empty($usuario_arr)) {
+                $_SESSION['url'] = "$PROYECTO/vista/";
+                return false;
+            } 
+        } else {
+            $_SESSION['url'] = "$PROYECTO/vista/";
+            return false;
+        } 
 
         return true;
     }

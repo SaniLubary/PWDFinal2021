@@ -13,7 +13,7 @@ class CarritoController {
 
         // Check pedidos de compra en estado 'iniciada'
         $compraController = new CompraController();
-        $compras = $compraController->buscarSinEstado();
+        $compras = $compraController->buscarSinEstado($_SESSION['idusuario']);
         if (!empty($compras)) {
             // Check productos agregados al pedido de compra
             $carrito = [];
@@ -39,7 +39,7 @@ class CarritoController {
     function agregarAlCarrito($idproducto, $cicantidad) {
         $carrito = $this->verCarrito();
         // Si no se encontraron compras activas, crear una
-        if (count($carrito) === 0) {
+        if (empty($carrito)) {
             $compraController = new CompraController();
             
             if (!$compra = $compraController->alta(['idusuario' => $_SESSION['idusuario']])) {

@@ -114,10 +114,10 @@ class CompraController {
      * @param int $param
      * @return array<Compra>
      */
-    public function buscarSinEstado(){
+    public function buscarSinEstado($idusuario){
         
         $compra= new Compra();
-        $compras = $compra->listarSinEstado(); 
+        $compras = $compra->listarSinEstado($idusuario); 
 
         return $compras;
     }

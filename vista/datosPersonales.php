@@ -41,7 +41,7 @@ if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass
         <form id="form_register" action="#" method="POST" enctype="multipart/form-data" onsubmit="formOnSubmit()">
             Actualizar Datos Personales<br>
             Nuevo Usuario: <input class="form-control" placeholder="<?=$usr->getUsnombre()?>" type="text" name="usnombre"><br>
-            Nuevo Mail: <input class="form-control"placeholder="<?=$usr->geetUsmail()?>" type="email" name="usmail"><br>
+            Nuevo Mail: <input class="form-control"placeholder="<?=$usr->getUsmail()?>" type="email" name="usmail"><br>
             Nueva Contrase&ntilde;a: <input class="form-control" type="password" id="uspass" name="uspass"><br>
             <input class="form-control" type="submit" onclick="(e) => submit(e)" value="Actualizar" >
             <div id="cargando" class="spinner-border" role="status"></div>

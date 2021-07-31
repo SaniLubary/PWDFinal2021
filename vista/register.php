@@ -47,7 +47,7 @@ if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass
             Usuario: <input class="form-control" type="text" name="usnombre" required><br>
             Mail: <input class="form-control" type="email" name="usmail" required><br>
             Contrase&ntilde;a: <input class="form-control" type="password" id="uspass" name="uspass" required><br>
-            <input class="form-control" type="submit" onclick="(e) => submitLoginRegister(e)" value="Enviar" >
+            <input class="form-control" type="submit" value="Enviar" >
             <div id="cargando" class="spinner-border" role="status"></div>
         </form>
 

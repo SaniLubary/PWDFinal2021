@@ -40,8 +40,8 @@ if ($user_validado)
         <form id="form_login" action="./requests.php" method="POST" onsubmit="formOnSubmit()">
             Usuario: <input class="form-control" type="text" name="usnombre" required><br>
             Contrase&ntilde;a: <input class="form-control" type="password" id="uspass" name="uspass" required><br>
-            <input class="form-control" type="submit" value="Enviar" onclick="(e) => submitLoginRegister(e)">
-            <div id="cargando" style="display: none;" class="spinner-border" role="status"></div>
+            <input class="form-control" type="submit" value="Enviar">
+            <div id="cargando" style="display: none;" class="spinner-border" onclick="formOnSubmit()" role="status"></div>
         </form>
 
         <!-- Se incluye el footer -->

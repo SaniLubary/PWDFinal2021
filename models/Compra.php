@@ -156,11 +156,14 @@ class Compra {
         return $arreglo;
     }
 
-    public static  function listarSinEstado(){
+    public static  function listarSinEstado($idusuario){
         $arreglo = array();
         $base = new BaseDatos();
 
-        $sql = "SELECT * FROM Compra ";
+        $sql = "SELECT c.*, ce.idcompraestado FROM Compra c 
+        left JOIN compraestado ce ON ce.idcompra = c.idcompra  
+        where ce.idcompraestado is null and idusuario =  $idusuario
+        ORDER BY c.idcompra DESC";
        
         $res = $base->Ejecutar($sql);
         if($res>-1){

@@ -86,54 +86,17 @@ async function agregarAlCarrito(idproducto, user_validado) {
     }
 }
 
-/**
- * Cifra la contrasenia para el submit
- *  Aplica estilo al formulario para input correctos/incorrectos
- * @param {event} e Obj event del boton submit
- * @returns 
- */
-function submit(e) {
-    var t = evt.target;
-    let form_correcto = true
-    
-    // Aplicar estilos por cada input requerido
-    let form_inputs = document.querySelectorAll('form [required]')
-    for(let i=0; i < form_inputs.length; i++){
-        if(form_inputs[i].value === '' && form_inputs[i].hasAttribute('required')){
-            form_inputs[i].style.backgroundColor = 'rgba(255, 0, 0, 0.42)'
-            form_correcto = false
-        } else {
-            form_inputs[i].style.backgroundColor = 'rgba(0, 255, 95, 0.42)'
-        }
-    }
-
-    if (!form_correcto) return false;
-    
-    let form = document.querySelector('form');
-    // Se oculta el formuilario y se muestra un mensaje de 'Cargando'
-    form.style.display = 'none'
-    document.getElementById('cargando').style.display = 'block'
-    let pass = document.getElementById("uspass").value
-    if (pass !== '' || pass !== null) {
-        pass = hex_md5(document.getElementById("uspass").value)
-    }
-
-    // Se completa la accion del boton 'submit'
-    t.dispatchEvent( evt )
-    return false
-}
-
 function formOnSubmit() {
     // Se oculta el formuilario y se muestra un mensaje de 'Cargando'
     let form = document.querySelector('form');
-    // Se oculta el formuilario y se muestra un mensaje de 'Cargando'
     form.style.display = 'none'
     document.getElementById('cargando').style.display = 'block'
     let pass = document.getElementById("uspass").value
-    if (pass !== '' || pass !== null) {
-        pass = hex_md5(document.getElementById("uspass").value)
-    }
 
+    if (pass !== '') {
+        document.getElementById("uspass").value = hex_md5(pass)
+    }
+    
     return true
 }
 
