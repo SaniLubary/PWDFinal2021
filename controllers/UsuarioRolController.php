@@ -19,8 +19,9 @@ class UsuarioRolController {
      * @return boolean
      */
     private function seteadosCamposClaves($param){
-        if (!isset($param['idusuario']) or !isset($param['idrol']));
+        if (!isset($param['idusuario']) or !isset($param['idrol'])) {
             return false;
+        }
         return true;
     }
     
