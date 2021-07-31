@@ -76,9 +76,7 @@ class SessionController {
             $usuarioRol_arr = $usuarioRolController->buscar(['idusuario' => $usuario->getIdusuario()]);
             if (count($usuarioRol_arr) > 0) 
                 return $usuarioRol_arr[0]->getIdRol(); 
-            }
-        
-        return false;
+        } else return 3; // Rol de invitado
     }
     
     public function cerrar(){

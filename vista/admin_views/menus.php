@@ -1,6 +1,8 @@
 <?php
 $menuController = new MenuController();
-$menus = $menuController->buscar([]);
+
+//? Ya hay una variable 'menu' creada en el Header. Pero una vez iniciado el header, se puede pisar tranquilamente
+$menus = $menuController->buscar([]); 
 
 // Crear array de opciones para el select idpadre dentro de la tabla
 // Durante la creacion de la tabla, se quita el elemento del arr con 'key' => 'id propio', ya que menu padre no puede ser si mismo

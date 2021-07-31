@@ -25,7 +25,13 @@ if ($sessionController->validar())
     $user_validado = true;   
 
 $rol = $sessionController->getRol();
-if ($rol === 1) {
-  header("Location: ./admin.php");
-  exit();
+
+// Solo se continua si no se hizo un pedido a requests.php
+// Si estamos haciendo un request a requests.php, no queremos redirecciones raras
+if (!strpos( $_SERVER['REQUEST_URI'], 'requests.php' )) {
+  // admin no compra, se obliga a redirigir a ./admin.php
+  if ($rol === 1 && !strpos( $_SERVER['REQUEST_URI'], 'admin.php' ) ) {
+    header("Location: ./admin.php");
+    exit();
+  }
 }

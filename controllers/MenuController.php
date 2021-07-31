@@ -96,6 +96,7 @@ class MenuController {
     /**
      * @param array $param
      * @param int $idrol si se deesea buscar todos los menues para un rol especifico
+     * @param int $sin_rol Para mostrar menus sin rol especifico
      * @return array<Menu>
      */
     public function buscar($param = [], $idrol = null){

@@ -1,20 +1,10 @@
 <?php
 include "../configuration.php";
 
-// Valida session del user
-$sessionController = new SessionController();
-$user_validado = false;
-if ($sessionController->validar())
-    $user_validado = true;   
-
-$rol = $sessionController->getRol();
 if ($rol !== 1) {
-  header("Location: ../");
+  header("Location: ./");
   exit();
 }
-
-// Setear esta pag como la ultima visitada para las redirecciones con redireccionarUltimaPagina() en utils/funciones.php 
-$_SESSION['url'] = "$PROYECTO/vista/admin/"; 
 
 // Buscar Productos a mostrar
 $productoController = new ProductoController();

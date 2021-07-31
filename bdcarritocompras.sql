@@ -109,9 +109,7 @@ INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabi
 (5, 'Cuenta', 'bi bi-person-lines-fill', NULL, NULL),
 (6, 'Datos Personales', '', 5, NULL),
 (7, 'Historial de Compras', '', 5, NULL),
-(8, 'Usuarios', '', NULL, NULL),
-(9, 'Productos', '', NULL, NULL),
-(10, 'Menus', '', NULL, NULL);
+(8, 'Compras', '', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -131,14 +129,16 @@ CREATE TABLE `menurol` (
 INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
 -- Ver carrito y manejar su propia cuenta solo clientes
 (1, 2), 
+(2, 2), 
 (5, 2), 
 (6, 2), 
 (7, 2),
--- Iniciar/cerrar sesion y crear cuenta pueden hacerlo todos, por lo que no se agrega en 'menurol'
--- Menu de secciones que administra el usuario de tipo 'admin'
-(8, 1),
-(9, 1),
-(10, 1);
+-- Iniciar sesion y crear cuenta pueden hacerlo invitados
+(3, 3), 
+(4, 3),
+-- Menu de secciones que administra el usuario de tipo 'admin' y cerrar sesion
+(2, 1),
+(8, 1);
 
 -- --------------------------------------------------------
 
@@ -182,7 +182,8 @@ CREATE TABLE `rol` (
 
 INSERT INTO `rol` (`idrol`, `rodescripcion`) VALUES
 (1, 'admin'),
-(2, 'cliente');
+(2, 'cliente'),
+(3, 'invitado');
 
 -- --------------------------------------------------------
 

@@ -173,7 +173,7 @@ class Menu {
     
     /**
      * @param string $condicion condicional 'where'
-     * @param number|null $idrol Si se desea buscar los menus que correspondan a un cierto rol
+     * @param int $menus_con_roles Si se desea buscar los menus que corresponden a un cierto rol
      */
     public static function listar($condicion="", $idrol = null){
         $arreglo = array();
@@ -184,12 +184,13 @@ class Menu {
             $sql .= 'WHERE '.$condicion;
         }
 
-        if ($idrol !== null) {
+        if ($idrol != null && $idrol != false && is_numeric($idrol)) { // Se muestran los menus del idrol indicado
             $sql = "SELECT m.* from menu m 
-            inner join menurol m2 on m2.idmenu = m.idmenu 
-            inner join rol r on r.idrol = m2.idrol 
-            where m2.idrol = $idrol";
+                    inner join menurol m2 on m2.idmenu = m.idmenu 
+                    inner join rol r on r.idrol = m2.idrol 
+                    where m2.idrol = $idrol";
         }
+
         $res = $base->Ejecutar($sql);
         if($res>-1){
             if($res>0){

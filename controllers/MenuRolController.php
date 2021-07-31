@@ -94,7 +94,7 @@ class MenuRolController {
     /**
      * permite buscar un objeto
      * @param array $param
-     * @return boolean
+     * @return array<MenuRol> $arreglo
      */
     public function buscar($param){
         $where = " true ";
@@ -104,13 +104,9 @@ class MenuRolController {
                 if  (isset($param['idrol']))
                     $where.=" and idrol ='".$param['idrol']."'";
         }
-        $arreglo = Rol::listar($where);
-        return $arreglo;
-        
-        
-        
-        
+        $rol = new MenuRol();
+        $arreglo = $rol->listar($where);
+        return $arreglo;        
     }
-    
 }
 ?>
