@@ -1,0 +1,23 @@
+{
+  "name": "tpfinal",
+  "version": "1.0.0",
+  "description": "Es necesario modificar configuration.php en el root del proyecto:",
+  "main": "./vista/index.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaniLubary/PWDFinal2021.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SaniLubary/PWDFinal2021/issues"
+  },
+  "homepage": "https://github.com/SaniLubary/PWDFinal2021#readme",
+  "dependencies": {
+    "bootstrap": "^5.0.2",
+    "bootstrap-icons": "^1.5.0"
+  }
+}

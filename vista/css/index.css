@@ -1,0 +1,65 @@
+/* Estilo para las redondear y animar las tarjetas */
+.card-redondeado {
+  border-radius: 25px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(.03,.73,.31,1.06);
+}
+
+.card-redondeado:hover {
+  border-color: rgba(20, 86, 154, 1);
+  box-shadow: 0px 0px 8px rgba(20, 86, 154, 0.3);
+}
+
+/* Modificacion visual para inputs de select y escribir cantidad de productos a comprar */
+.custom-input {
+  border:none;
+  border-radius: 10px;
+}
+
+.custom-input:focus {
+  border-color: none;
+  outline: inherit;
+  box-shadow: none;
+}
+
+.custom-input:hover {
+  box-shadow: 0px 0px 8px rgba(20, 86, 154, 0.3);
+}
+
+/* Estilo para input de escribir cant. de productos a comprar */
+.cantidad-input {
+  display: none;
+  width: 100%;
+  padding: .375rem 2.25rem .375rem .75rem;
+}
+
+/* Css para ocultar las flechas del input de tipo 'number' */
+input[type="number"] {
+  -webkit-appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+}
+
+#cargando{
+  display: none;
+  margin: 25px;
+}
+
+form {
+  width: 50%;
+  margin: auto;
+}
+
+form > input[type='submit'] {
+  color: white;
+  background-color: rgba(20, 86, 154, 0.7);
+}
+form > input[type='submit']:hover {
+  color: azure;
+  box-shadow: 0px 0px 8px rgba(20, 86, 154, 0.3);
+  background-color: rgba(20, 86, 154, 0.8);
+}
