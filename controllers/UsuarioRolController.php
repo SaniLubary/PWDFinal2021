@@ -6,9 +6,9 @@ class UsuarioRolController {
      */
     private function cargarObjeto($param){
         $usuarioRol = null;
-        if ( array_key_exists('idrol',$param) && array_key_exists('idusuario',$param) ) {
+        if ( array_key_exists('rol',$param) && array_key_exists('usuario',$param) ) {
             $usuarioRol = new UsuarioRol();
-            $usuarioRol->setear($param['idusuario'], $param['idrol']);
+            $usuarioRol->setear($param['usuario'], $param['rol']);
         }
         
         return $usuarioRol;

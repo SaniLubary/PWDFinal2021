@@ -1,8 +1,8 @@
 <?php
 class CompraEstado {
     private $idcompraestado;
-    private $idcompra;
-    private $idcompraestadotipo;
+    private $compra;
+    private $compraestadotipo;
     private $cefechaini;
     private $cefechafin;
     private $mensajeoperacion;
@@ -17,24 +17,36 @@ class CompraEstado {
         $this->idcompraestado = $idcompraestado;
     }
 
-    public function getIdcompra()
+    /**
+     * @return model<Compra>
+     */
+    public function getCompra()
     {
-        return $this->idcompra;
+        return $this->compra;
     }
 
-    public function setIdcompra($idcompra)
+    /**
+     * @param model<Compra>
+     */
+    public function setCompra($compra)
     {
-        $this->idcompra = $idcompra;
+        $this->compra = $compra;
     }
 
-    public function getIdcompraestadotipo()
+    /**
+     * @return model<Compraestadotipo>
+     */
+    public function getCompraestadotipo()
     {
-        return $this->idcompraestadotipo;
+        return $this->compraestadotipo;
     }
 
-    public function setIdcompraestadotipo($idcompraestadotipo)
+    /**
+     * @param model<Compraestadotipo>
+     */
+    public function setCompraestadotipo($compraestadotipo)
     {
-        $this->idcompraestadotipo = $idcompraestadotipo;
+        $this->compraestadotipo = $compraestadotipo;
     }
 
     public function getCefechaini()
@@ -69,18 +81,18 @@ class CompraEstado {
 
     public function __construct(){
          $this->idcompraestado="";
-         $this->idcompra="" ;
-         $this->idcompraestadotipo="";
+         $this->compra="" ;
+         $this->compraestadotipo="";
          $this->cefechaini="";
          $this->cefechafin = null;
          $this->mensajeoperacion ="";
         
      }
 
-     public function setear($idcompraestado, $idcompra, $idcompraestadotipo, $cefechaini, $cefechafin)    {
+     public function setear($idcompraestado, $compra, $compraestadotipo, $cefechaini, $cefechafin)    {
         $this->setIdcompraestado($idcompraestado);
-        $this->setIdcompra($idcompra);
-        $this->setIdcompraestadotipo($idcompraestadotipo);
+        $this->setCompra($compra);
+        $this->setCompraestadotipo($compraestadotipo);
         $this->setCefechaini($cefechaini);
         $this->setCefechafin($cefechafin);
     }
@@ -98,7 +110,16 @@ class CompraEstado {
         
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
-            $this->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'],$row['cefechaini'],$row['cefechafin']); 
+            
+            $compraController = new CompraController();
+            $compra = $compraController->buscar(['idcompra' => $row['idcompra']]);
+            if (!empty($compra)) $compra = $compra[0];
+            
+            $cetController = new CompraEstadoTipoController();
+            $compraestadotipo = $cetController->buscar(['idcompraestadotipo' => $row['idcompraestadotipo']]);
+            if (!empty($compraestadotipo)) $compraestadotipo = $compraestadotipo[0];
+            
+            $this->setear($row['idcompraestado'],$compra,$compraestadotipo,$row['cefechaini'],$row['cefechafin']); 
         }
         
         return true;       
@@ -106,9 +127,9 @@ class CompraEstado {
     
     public function insertar(){
         $resp = false;
-        $base=new BaseDatos();
+        $base = new BaseDatos();
         $sql="INSERT INTO CompraEstado( idcompra ,  idcompraestadotipo ,  cefechafin) 
-            VALUES('".$this->getIdcompra()."','".$this->getIdcompraestadotipo()."', '".$this->getCefechafin()."') ";
+            VALUES('".$this->getCompra()->getIdcompra()."','".$this->getCompraestadotipo()->getIdcompraestadotipo()."', '".$this->getCefechafin()."') ";
 
         if (!$base->Iniciar()) {
             $this->setmensajeoperacion("CompraEstado->insertar: ".$base->getError()[2]);
@@ -127,7 +148,7 @@ class CompraEstado {
     public function modificar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="UPDATE CompraEstado SET idcompra='".$this->getIdcompra()."',idcompraestadotipo='".$this->getIdcompraestadotipo()."',
+        $sql="UPDATE CompraEstado SET idcompra='".$this->getCompra()->getIdcompra()."',idcompraestadotipo='".$this->getCompraestadotipo()->getIdcompraestadotipo()."',
             cefechaini='".$this->getCefechaini()."', cefechafin='".$this->getCefechafin()."' ";
         $sql.= " WHERE idcompraestado = ".$this->getIdcompraestado();
 
@@ -170,7 +191,7 @@ class CompraEstado {
         }
 
         if ($order_by_estado) {
-            $sql .= 'ORDER BY idcompraestadotipo DESC';
+            $sql .= ' ORDER BY idcompraestadotipo DESC';
         }
         
         $res = $base->Ejecutar($sql);
@@ -179,7 +200,16 @@ class CompraEstado {
                 
                 while ($row = $base->Registro()){
                     $obj = new CompraEstado();
-                    $obj->setear($row['idcompraestado'], $row['idcompra'],$row['idcompraestadotipo'], $row['cefechaini'],$row['cefechafin']); 
+
+                    $compraController = new CompraController();
+                    $compra = $compraController->buscar(['idcompra' => $row['idcompra']]);
+                    if (!empty($compra)) $compra = $compra[0];
+                    
+                    $cetController = new CompraEstadoTipoController();
+                    $compraestadotipo = $cetController->buscar(['idcompraestadotipo' => $row['idcompraestadotipo']]);
+                    if (!empty($compraestadotipo)) $compraestadotipo = $compraestadotipo[0];
+                            
+                    $obj->setear($row['idcompraestado'],$compra,$compraestadotipo, $row['cefechaini'],$row['cefechafin']); 
                     array_push($arreglo, $obj);
                 }
                 

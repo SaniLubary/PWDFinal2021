@@ -2,7 +2,6 @@ function aumentarEstadoDeCompra(id) {
   fetch('./requests.php?aumentar-estado=true&idcompra='+id)
         .then(response => response.json())
         .then(data => {
-          console.log(data);
           if (data.response == true) {
             window.location.reload(true)
           } else {

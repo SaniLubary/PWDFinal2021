@@ -3,12 +3,12 @@
 class CompraEstadoController {
     /**
      * @param array Donde ['nombre-columna' => 'valor']
-     * @return object
+     * @return CompraEstado
      */
     public function cargarObjeto($param){
-        if(array_key_exists('idcompraestado',$param) && array_key_exists('idcompra',$param) && array_key_exists('idcompraestadotipo',$param) && array_key_exists('cefechaini',$param) && array_key_exists('cefechafin',$param)) {
+        if(array_key_exists('idcompraestado',$param) && array_key_exists('compra',$param) && array_key_exists('compraestadotipo',$param) && array_key_exists('cefechaini',$param) && array_key_exists('cefechafin',$param)) {
             $obj = new CompraEstado();
-            $obj->setear($param['idcompraestado'], $param['idcompra'], $param['idcompraestadotipo'], $param['cefechaini'], $param['cefechafin']);
+            $obj->setear($param['idcompraestado'], $param['compra'], $param['compraestadotipo'], $param['cefechaini'], $param['cefechafin']);
             return $obj;
         }
         return null;
@@ -46,7 +46,16 @@ class CompraEstadoController {
      */
     public function alta($param){
         $param['idcompraestado'] = null;
-        $param['idcompraestadotipo'] = isset($param['idcompraestadotipo'])?$param['idcompraestadotipo']:1;
+
+        if ( empty($param['compraestadotipo']) ) {
+            $compraestadotipoController = new CompraEstadoTipoController();
+            $compraestadotipo = $compraestadotipoController->buscar(['idcompraestadotipo' => 1]);
+            $param['compraestadotipo'] = $compraestadotipo[0];
+        }
+        
+        $compraController = new CompraController();
+        $param['compra'] = $compraController->buscar(['idcompra' => $param['idcompra']])[0];
+        
         $param['cefechaini'] = date("Y-m-d H:i:s");
         $param['cefechafin'] = null;
         $compraEstado = $this->cargarObjeto($param);
@@ -124,18 +133,24 @@ class CompraEstadoController {
     public function aumentarEstado($idcompra) {
         // Se busca el ultimo estado, para actualizar cofechafin
         $estado_anterior = $this->buscar(['idcompra' => $idcompra], true);
-        if (!empty($estado_anterior)) {
+        if (!empty($estado_anterior[0])) {
             $estado_anterior = $estado_anterior[0];
             // Si el ultimo estado de la compra es 3 (enviada), no se agrega un nuevo estado
-            if ($estado_anterior->getIdcompraestadotipo() === 3) {
+            if ($estado_anterior->getCompraestadotipo()->getIdcompraestadotipo() === 3) {
                 return false;
             } else {
                 $estado_anterior->setCefechafin(date("Y-m-d H:i:s"));
                 $estado_anterior->modificar();
             }
 
+            $nuevo_idcompraestadotipo = $estado_anterior->getCompraestadotipo()->getIdcompraestadotipo()+1;
+            
+            $cetController = new compraEstadoTipoController();
+            $nuevo_cet = $cetController->buscar(['idcompraestadotipo' => $nuevo_idcompraestadotipo]);
+            $nuevo_cet = !empty($nuevo_cet[0])? $nuevo_cet[0] : $cetController->buscar([])[0];
+
             // Agregamos nuevo estado con id mayor
-            $this->alta(['idcompra' => $idcompra, 'idcompraestadotipo' => $estado_anterior->getIdcompraestadotipo()+1]);
+            $this->alta(['idcompra' => $idcompra, 'compraestadotipo' => $nuevo_cet]);
             return true;
         } else {
             // Agregamos estado inicial
@@ -151,14 +166,18 @@ class CompraEstadoController {
     public function estadoCancelado($idcompra) {
         // Se busca el ultimo estado, para actualizar cofechafin
         $estado_anterior = $this->buscar(['idcompra' => $idcompra], true);
-        if (!empty($estado_anterior)) {
+        if (!empty($estado_anterior[0])) {
             $estado_anterior = $estado_anterior[0];
             $estado_anterior->setCefechafin(date("Y-m-d H:i:s"));
             $estado_anterior->modificar();
         } 
 
+        $cetController = new compraEstadoTipoController();
+        $nuevo_cet = $cetController->buscar(['idcompraestadotipo' => 4]);
+        $nuevo_cet = !empty($nuevo_cet[0])? $nuevo_cet[0] : $cetController->buscar([])[0];
+        
         // Agregamos nuevo estado con id 4 (compra cancelada)
-        if ( $this->alta(['idcompra' => $idcompra, 'idcompraestadotipo' => 4]) ) {
+        if ( $this->alta(['idcompra' => $idcompra, 'compraestadotipo' => $nuevo_cet]) ) {
             return true;
         } else return false;
     }

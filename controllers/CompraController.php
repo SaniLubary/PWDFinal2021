@@ -6,10 +6,10 @@ class CompraController {
      */
     private function cargarObjeto($param){
         $compra = null;
-        if ( array_key_exists('idcompra',$param) and array_key_exists('cofecha', $param) and array_key_exists('idusuario',$param) ) {
+        if ( array_key_exists('idcompra',$param) and array_key_exists('cofecha', $param) and array_key_exists('usuario',$param) ) {
             $compra = new Compra();
             $param['cofecha'] = date("Y-m-d H:i:s");
-            $compra->setear($param['idcompra'], $param['cofecha'], $param['idusuario']);
+            $compra->setear($param['idcompra'], $param['cofecha'], $param['usuario']);
         }
         
         return $compra;

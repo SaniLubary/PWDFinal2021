@@ -2,7 +2,7 @@
 class Compra {
     private $idcompra;
     private $cofecha;
-    private $idusuario;
+    private $usuario;
     private $mensajeoperacion;
     
     public function getIdcompra()
@@ -25,14 +25,17 @@ class Compra {
         $this->cofecha = $cofecha;
     }
 
-    public function setIdusuario($idusuario)
+    /**
+     * @param model<Usuario>
+     */
+    public function setUsuario($usuario)
     {
-        $this->idusuario = $idusuario;
+        $this->usuario = $usuario;
     }
 
-    public function getIdusuario()
+    public function getUsuario()
     {
-        return $this->idusuario;
+        return $this->usuario;
     }
 
 
@@ -49,14 +52,14 @@ class Compra {
     public function __construct(){
          $this->idcompra="";
          $this->cofecha="" ;
-         $this->idusuario="";
+         $this->usuario="";
          $this->mensajeoperacion ="";
      }
 
-     public function setear($idcompra, $cofecha, $idusuario) {
+     public function setear($idcompra, $cofecha, $usuario) {
         $this->setIdcompra($idcompra);
         $this->setCofecha($cofecha);
-        $this->setIdusuario($idusuario);
+        $this->setUsuario($usuario);
     }
     
     
@@ -70,7 +73,12 @@ class Compra {
         
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
-            $this->setear($row['idcompra'], $row['cofecha'], $row['idcompra'], $row['idusuario']); 
+
+            $usController = new UsuarioController();
+            $usuario = $usController->buscar(['idusuario' => $row['idusuario']]);
+            if (!empty($usuario)) $usuario = $usuario[0];
+            
+            $this->setear($row['idcompra'], $row['cofecha'], $row['idcompra'], $usuario); 
         }
 
         return true;
@@ -80,7 +88,7 @@ class Compra {
         $resp = false;
         $base=new BaseDatos();
         $sql="INSERT INTO Compra( cofecha, idusuario ) ";
-        $sql.="VALUES('".$this->getCofecha()."', '".$this->getIdusuario()."');";
+        $sql.="VALUES('".$this->getCofecha()."', '".$this->getUsuario()->getIdusuario()."');";
         if ($base->Iniciar()) {
             if ($elid = $base->Ejecutar($sql)) {
                 $this->setIdcompra($elid);
@@ -97,7 +105,7 @@ class Compra {
     public function modificar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="UPDATE Compra SET cofecha='".$this->getCofecha()."', idusuario='".$this->getIdusuario()."'";
+        $sql="UPDATE Compra SET cofecha='".$this->getCofecha()."', usuario='".$this->getUsuario()->getIdusuario()."'";
         $sql.= " WHERE idcompra = ".$this->getIdcompra();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
@@ -148,7 +156,12 @@ class Compra {
             if($res>0){
                 while ($row = $base->Registro()){
                     $obj = new Compra();
-                    $obj->setear($row['idcompra'], $row['cofecha'], $row['idusuario']); 
+
+                    $usController = new UsuarioController();
+                    $usuario = $usController->buscar(['idusuario' => $row['idusuario']]);
+                    if (!empty($usuario)) $usuario = $usuario[0];
+
+                    $obj->setear($row['idcompra'], $row['cofecha'], $usuario); 
                     array_push($arreglo, $obj);
                 }
             }
@@ -170,7 +183,12 @@ class Compra {
             if($res>0){
                 while ($row = $base->Registro()){
                     $obj = new Compra();
-                    $obj->setear($row['idcompra'], $row['cofecha'], $row['idusuario']); 
+
+                    $usController = new UsuarioController();
+                    $usuario = $usController->buscar(['idusuario' => $row['idusuario']]);
+                    if (!empty($usuario)) $usuario = $usuario[0];
+
+                    $obj->setear($row['idcompra'], $row['cofecha'], $usuario); 
                     array_push($arreglo, $obj);
                 }
             }

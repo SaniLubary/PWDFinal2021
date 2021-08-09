@@ -41,9 +41,9 @@ $rolcontroller = new RolController();
         
         $usuariorol = $usuariorolcontroller->buscar(['idusuario' => $id]);
         if (!empty($usuariorol)) {
-          $rol = $rolcontroller->buscar(['idrol'=>$usuariorol[0]->getidrol()]);
+          $rol = $usuariorol[0]->getRol();
           if (!empty($rol)) {
-            $rol = $rol[0]->getRodescripcion();
+            $rol = $rol->getRodescripcion();
           }
         }
         

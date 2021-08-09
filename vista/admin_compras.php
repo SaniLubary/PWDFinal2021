@@ -61,10 +61,9 @@ if (!$user_validado) redireccionarUltimaPagina();
                 $usuarioController = new UsuarioController();
                 $compraController = new CompraController();
                 $compraEstadoController = new CompraEstadoController();
-                $compraEstadoTipoController = new compraEstadoTipoController();
 
                 $compras = $compraController->buscar([]);
-                
+
                 // Creacion de filas para cada compra
                 foreach ($compras as $compra) {
                   $id = $compra->getIdcompra();
@@ -75,21 +74,16 @@ if (!$user_validado) redireccionarUltimaPagina();
                     $fecha_compra = date("Y-m-d",strtotime($fecha_compra));
                   } else $fecha_compra = ''; 
                   
-                  // Se busca el nombre del comprador
-                  $comprador = $usuarioController->buscar(['idusuario' => $compra->getIdusuario()]);
-                  if (!empty($comprador)) {
-                    $comprador = $comprador[0]->getUsnombre();
+                  // Se busca el nombre del comprador                  
+                  $usuario = $compra->getUsuario();
+                  if (isset($usuario)) {
+                    $comprador = $compra->getUsuario()->getUsnombre();
                   } else $comprador = '';
 
                   // Se busca el nombre del estado de la compra actual
                   $compraEstado = $compraEstadoController->buscar(['idcompra' => $id], true);
-                  if (!empty($compraEstado)) {
-                    $compraEstado = $compraEstado[0];
-                    $idCompraEstadoTipo = $compraEstado->getIdcompraestadotipo();
-                    $cet = $compraEstadoTipoController->buscar(['idcompraestadotipo' => $idCompraEstadoTipo]);
-                    if (!empty($cet)) {
-                      $estado = $cet[0]->getCetdescripcion();
-                    } else $estado = 'Posee Productos en el Carro';
+                  if (!empty($compraEstado[0])) {
+                    $estado = $compraEstado[0]->getCompraEstadoTipo()->getCetdescripcion();
                   } else $estado = 'Posee Productos en el Carro';
 
                   

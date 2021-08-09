@@ -77,13 +77,8 @@ $usr = $sessionController->getUsuario();
                   $compraEstado = $compraEstadoController->buscar(['idcompra' => $id], true);
                   if (!empty($compraEstado)) {
                     $compraEstado = $compraEstado[0];
-                    $idCompraEstadoTipo = $compraEstado->getIdcompraestadotipo();
-                    $cet = $compraEstadoTipoController->buscar(['idcompraestadotipo' => $idCompraEstadoTipo]);
-                    if (!empty($cet)) {
-                      $estado = $cet[0]->getCetdescripcion();
-                    } else $estado = 'Posee Productos en el Carro';
-                  } else $estado = 'Posee Productos en el Carro';
-
+                    $estado = $compraEstado->getCompraestadotipo()->getCetdescripcion();
+                  } else continue; // No se muestra el estado 'Posee Productos en el Carro'
                   
                 ?>
                   <tr id="tr-<?=$id?>">

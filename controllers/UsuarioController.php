@@ -56,7 +56,10 @@ class UsuarioController {
         $usuarioRolController = new UsuarioRolController();
 
         // Se da rol 'cliente' (2) en cada nuevo registro automaticamente
-        if (!$usuarioRolController->alta(['idusuario' => $usuario->getIdusuario(), 'idrol' => 2])) {
+        $rolController = new RolController();
+        $rol = $rolController->buscar(['idrol' => 2]);
+        
+        if (!empty($rol[0]) && !$usuarioRolController->alta(['usuario' => $usuario, 'rol' => $rol[0]])) {
             // Si hay un error otorgando rol, se da de baja el usuario creado
             $this->baja(['idusuario' => $usuario->getIdusuario()]);
             return false;

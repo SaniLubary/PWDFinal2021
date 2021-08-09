@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 class CarritoController {
     
     /**
@@ -42,7 +45,10 @@ class CarritoController {
         if (empty($carrito)) {
             $compraController = new CompraController();
             
-            if (!$compra = $compraController->alta(['idusuario' => $_SESSION['idusuario']])) {
+            $sessionController = new SessionController();
+            $usuario = $sessionController->getUsuario();
+            
+            if (!$compra = $compraController->alta(['usuario' => $usuario])) {
                 $compra = null;
             }
         } else $compra = $carrito[0]['compra'];
@@ -114,7 +120,11 @@ class CarritoController {
         
         $compra = $compras_activas[0]['compra'];
         $compraEstadoController = new CompraEstadoController();
-        if ($compra && !$compraEstadoController->alta(['idcompra' => $compra->getIdcompra(), 'idcompraestadotipo' => 1])) {
+
+        $cetController = new CompraEstadoTipoController();
+        $compraestadotipo = $cetController->buscar(['idcompraestadotipo' => 1]);
+        
+        if ($compra && !$compraEstadoController->alta(['idcompra' => $compra->getIdcompra(), 'compraestadotipo' => $compraestadotipo])) {
             return false;
         }
 

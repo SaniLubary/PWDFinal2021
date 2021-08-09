@@ -21,9 +21,9 @@ class SessionController {
         if(!$this->activa())
             return false;
 
-        $_SESSION['idusuario']= $usuario->getIdUsuario();
-        $_SESSION['usnombre']= $usuario->getUsNombre();
-        $_SESSION['uspass']= $uspass;
+        $_SESSION['idusuario'] = $usuario->getIdUsuario();
+        $_SESSION['usnombre'] = $usuario->getUsNombre();
+        $_SESSION['uspass'] = $uspass;
 
         return true;
     }
@@ -83,7 +83,7 @@ class SessionController {
         if ($usuario = $this->getUsuario()) {
             $usuarioRol_arr = $usuarioRolController->buscar(['idusuario' => $usuario->getIdusuario()]);
             if (count($usuarioRol_arr) > 0) 
-                return $usuarioRol_arr[0]->getIdRol(); 
+                return $usuarioRol_arr[0]->getRol()->getIdrol(); 
         } else return 3; // Rol de invitado
     }
     
