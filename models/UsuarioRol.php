@@ -94,7 +94,7 @@ class UsuarioRol {
     public function modificar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="UPDATE usuariorol SET usuario='".$this->getUsuario()."',idrol='".$this->getRol()->getIdrol()."' WHERE idusuario=".$this->getUsuario()->getIdusuario();
+        $sql="UPDATE usuariorol SET idusuario='".$this->getUsuario()->getIdusuario()."',idrol='".$this->getRol()->getIdrol()."' WHERE idusuario=".$this->getUsuario()->getIdusuario();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;

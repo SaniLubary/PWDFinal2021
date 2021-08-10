@@ -62,12 +62,21 @@ class UsuarioRolController {
         $resp = false;
         if ($this->seteadosCamposClaves($param)){
             
-            $usuarioRol = $this->cargarObjeto($param);
-            
-            if($usuarioRol !=null and $usuarioRol->modificar()){
-                $resp = true;
+            $usuarioController = new UsuarioController();
+            $usuario = $usuarioController->buscar(['idusuario' => $param['idusuario']]);
+
+            $rol = new RolController();
+            $rol = $rol->buscar(['idrol' => $param['idrol']]);
+
+            if (!empty($rol[0]) || !empty($usuario[0])) {
+                $usuarioRol = $this->cargarObjeto(['rol' => $rol[0], 'usuario' => $usuario[0]]);
                 
+                if($usuarioRol != null and $usuarioRol->modificar()){
+                    $resp = true;
+                    
+                }
             }
+            
         }
         return $resp;
     }

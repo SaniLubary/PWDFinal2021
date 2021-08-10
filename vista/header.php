@@ -4,7 +4,7 @@ $menuController = new MenuController();
 $menurolController = new MenuRolController();
 
 // Se buscan los menus correspondientes al rol del usuario
-$menus = $menuController->buscar([], $rol);
+$menurol_arr = $menurolController->buscar(['idrol' => $rol]);
 ?>
 <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
@@ -41,18 +41,18 @@ $menus = $menuController->buscar([], $rol);
           <ul class="navbar-nav d-flex flex-row">
             <!-- Opciones de manejo de sesion -->
             <?php 
-            foreach ($menus as $menu) {
-              $medeshabilitado = $menu->getMedeshabilitado();
+            foreach ($menurol_arr as $menurol) {
+              $medeshabilitado = $menurol->getMenu()->getMedeshabilitado();
               if (!isset($medeshabilitado) or $medeshabilitado === (null || '')) {
-                // Si el menu tiene menus-hijo, se crea un dropdown a partir del menu padre
-                $hijos_menu = $menuController->buscar(['idpadre'=>$menu->getIdmenu()]);
-                $idpadre = $menu->getIdpadre();
+                // Si el menurol tiene menus-hijo, se crea un dropdown a partir del menurol padre
+                $hijos_menu = $menuController->buscar(['idpadre'=>$menurol->getmenu()->getIdmenu()]);
+                $padre = $menurol->getMenu()->getpadre();
                 if ( !empty($hijos_menu) ) {
-                  crearDropDown($menu, $hijos_menu);
-                } else if ( !is_numeric($idpadre) ) { // Si no tiene idpadre ni hijos
+                  crearDropDown($menurol, $hijos_menu);
+                } else if ( empty($padre) ) { // Si no tiene idpadre ni hijos
                   // Se crean botones de navegacion normales
-                  $nombre = $menu->getMenombre();
-                  $clases = $menu->getMedescripcion()?$menu->getMedescripcion():'';
+                  $nombre = $menurol->getMenu()->getMenombre();
+                  $clases = $menurol->getMenu()->getMedescripcion()?$menurol->getMenu()->getMedescripcion():'';
   
                   // Las acciones pueden ser redireccion ('href') o funciones ('onclick')
                   $accion = getAccion($nombre);
@@ -98,7 +98,7 @@ function getAccion($nombre) {
   }
 }
 
-function crearDropDown($menu, $hijos_menu) {
+function crearDropDown($menurol, $hijos_menu) {
   $li_elements = '';
   foreach ($hijos_menu as $hijo) {
     $nombre_hijo = $hijo->getMenombre();
@@ -107,9 +107,9 @@ function crearDropDown($menu, $hijos_menu) {
     $li_elements .= "<li><a class=\"dropdown-item\" $accion_hijo> $nombre_hijo</a></li>";
   }
   
-  $idmenu = $menu->getIdmenu();
-  $nombre = $menu->getMenombre();
-  $clases = $menu->getMedescripcion();
+  $idmenu = $menurol->getmenu()->getIdmenu();
+  $nombre = $menurol->getmenu()->getMenombre();
+  $clases = $menurol->getmenu()->getMedescripcion();
   
   echo "
   <li class=\"nav-item active\">

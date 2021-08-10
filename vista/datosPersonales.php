@@ -3,6 +3,8 @@ include "../configuration.php";
 
 $usr = $sessionController->getUsuario();
 
+if (!$usr) redireccionarUltimaPagina();
+
 // Si se hizo submit con los datos requeridos, se intenta . . .
 if (isset($_POST['usnombre']) && isset($_POST['usmail']) && isset($_POST['uspass'])) {
     $usuarioController = new UsuarioController();

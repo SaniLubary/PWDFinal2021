@@ -3,12 +3,12 @@
 class CompraItemController {
     /**
      * @param array Donde ['nombre-columna' => 'valor']
-     * @return object<CompraItem>|Null
+     * @return CompraItem
      */
     public function cargarObjeto($param){
-        if(array_key_exists('idcompraitem',$param) && array_key_exists('idproducto',$param) && array_key_exists('idcompra',$param) && array_key_exists('cicantidad',$param)){
+        if(array_key_exists('idcompraitem',$param) && array_key_exists('producto',$param) && array_key_exists('compra',$param) && array_key_exists('cicantidad',$param)){
             $obj = new CompraItem();
-            $obj->setear($param['idcompraitem'], $param['idproducto'], $param['idcompra'], $param['cicantidad']);
+            $obj->setear($param['idcompraitem'], $param['producto'], $param['compra'], $param['cicantidad']);
             return $obj;
         }
         return null;
@@ -44,10 +44,20 @@ class CompraItemController {
      */
     public function alta($param){
         $param['idcompraitem'] = null;
-        $compraItem = $this->cargarObjeto($param);
+        $productoController = new ProductoController();
+        $compraController = new compraController();
+        
+        $producto = $productoController->buscar(['idproducto' => $param['idproducto']]);
+        $compra = $compraController->buscar(['idcompra' => $param['idcompra']]);
+        
+        if (!empty($producto[0]) && !empty($compra[0])) {
+            $param['producto'] = $producto[0];
+            $param['compra'] = $compra[0];
+            $compraItem = $this->cargarObjeto($param);
 
-        if (!$compraItem or !$compraItem->insertar()){
-            return false;
+            if (!$compraItem or !$compraItem->insertar()){
+                return false;
+            }
         }
         
         return $compraItem;

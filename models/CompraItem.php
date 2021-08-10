@@ -1,39 +1,39 @@
 <?php
 class CompraItem {
     private $idcompraitem;
-    private $idproducto;
-    private $idcompra;
+    private $producto;
+    private $compra;
     private $cicantidad;
     private $mensajeoperacion;
     
-    public function getIdcompraitem()
+    public function getidcompraitem()
     {
         return $this->idcompraitem;
     }
 
-    public function setIdcompraitem($idcompraitem)
+    public function setidcompraitem($idcompraitem)
     {
         $this->idcompraitem = $idcompraitem;
     }
 
-    public function getIdproducto()
+    public function getproducto()
     {
-        return $this->idproducto;
+        return $this->producto;
     }
 
-    public function setIdproducto($idproducto)
+    public function setproducto($producto)
     {
-        $this->idproducto = $idproducto;
+        $this->producto = $producto;
     }
 
-    public function setIdcompra($idcompra)
+    public function setcompra($compra)
     {
-        $this->idcompra = $idcompra;
+        $this->compra = $compra;
     }
 
-    public function getIdcompra()
+    public function getcompra()
     {
-        return $this->idcompra;
+        return $this->compra;
     }
 
     public function setCicantidad($cicantidad)
@@ -58,30 +58,39 @@ class CompraItem {
 
     public function __construct(){
          $this->idcompraitem="";
-         $this->idproducto="" ;
-         $this->idcompra="" ;
+         $this->producto="" ;
+         $this->compra="" ;
          $this->cicantidad="";
          $this->mensajeoperacion ="";
      }
 
-     public function setear($idcompraitem, $idproducto, $idcompra, $cicantidad)    {
-        $this->setIdcompraitem($idcompraitem);
-        $this->setIdproducto($idproducto);
-        $this->setIdcompra($idcompra);
+     public function setear($idcompraitem, $producto, $compra, $cicantidad) {
+        $this->setidcompraitem($idcompraitem);
+        $this->setproducto($producto);
+        $this->setcompra($compra);
         $this->setCicantidad($cicantidad);
     }
     
     
-    public function cargar(){
-        $base=new BaseDatos();
-        $sql="SELECT * FROM compraitem WHERE idcompraitem = ".$this->getIdcompraitem();
+    public function cargar() {
+        $base = new BaseDatos();
+        $sql = "SELECT * FROM compraitem WHERE idcompraitem = ".$this->getidcompraitem();
         
         if (!$base->Iniciar() or $base->Ejecutar($sql) < 1) {
             return false;
         }
         
         $row = $base->Registro();
-        $this->setear($row['idcompraitem'], $row['idproducto'], $row['idcompra'], $row['cicantidad']); 
+
+        $compraController = new compraController();
+        $compra = $row['idcompra'] == null?:$compraController->buscar(['idcompra' => $row['idcompra']]);
+        if (!empty($compra)) $compra = $compra[0];  
+        
+        $productoController = new productoController();
+        $producto = $row['idproducto'] == null?:$productoController->buscar(['idproducto' => $row['idproducto']]);
+        if (!empty($producto)) $producto = $producto[0];  
+        
+        $this->setear($row['idcompraitem'], $producto, $compra, $row['cicantidad']); 
         
         return true;
     }
@@ -90,10 +99,10 @@ class CompraItem {
         $resp = false;
         $base=new BaseDatos();
         $sql="INSERT INTO compraitem( idproducto, idcompra, cicantidad ) ";
-        $sql.="VALUES('".$this->getIdproducto()."', '".$this->getIdcompra()."', '".$this->getCicantidad()."');";
+        $sql.="VALUES('".$this->getproducto()->getidproducto()."', '".$this->getcompra()->getidcompra()."', '".$this->getCicantidad()."');";
         if ($base->Iniciar()) {
             if ($elid = $base->Ejecutar($sql)) {
-                $this->setIdcompraitem($elid);
+                $this->setidcompraitem($elid);
                 $resp = true;
             } else {
                 $this->setMensajeoperacion("CompraItem->insertar: ".$base->getError()[2]);
@@ -107,9 +116,9 @@ class CompraItem {
     public function modificar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="UPDATE compraitem SET idproducto='".$this->getIdproducto()."', 
-            idcompra='".$this->getIdcompra()."', cicantidad='".$this->getCicantidad()."'";
-        $sql.= " WHERE idcompraitem = ".$this->getIdcompraitem();
+        $sql="UPDATE compraitem SET idproducto='".$this->getproducto()->getidproducto()."', 
+            compra='".$this->getcompra()->getidcompra()."', cicantidad='".$this->getCicantidad()."'";
+        $sql.= " WHERE idcompraitem = ".$this->getidcompraitem();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
@@ -126,7 +135,7 @@ class CompraItem {
     public function eliminar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="DELETE FROM compraitem WHERE idcompraitem =".$this->getIdcompraitem();
+        $sql="DELETE FROM compraitem WHERE idcompraitem =".$this->getidcompraitem();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
@@ -151,7 +160,16 @@ class CompraItem {
             if($res>0){
                 while ($row = $base->Registro()){
                     $obj = new compraItem();
-                    $obj->setear($row['idcompraitem'], $row['idproducto'], $row['idcompra'], $row['cicantidad']); 
+
+                    $compraController = new compraController();
+                    $compra = $row['idcompra'] == null?:$compraController->buscar(['idcompra' => $row['idcompra']]);
+                    if (!empty($compra)) $compra = $compra[0];  
+                    
+                    $productoController = new productoController();
+                    $producto = $row['idproducto'] == null?:$productoController->buscar(['idproducto' => $row['idproducto']]);
+                    if (!empty($producto)) $producto = $producto[0];  
+                    
+                    $obj->setear($row['idcompraitem'], $producto, $compra, $row['cicantidad']); 
                     array_push($arreglo, $obj);
                 }
             }

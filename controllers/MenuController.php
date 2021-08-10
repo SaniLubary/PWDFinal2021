@@ -8,14 +8,14 @@ class MenuController {
         $obj = null;
            
         if( array_key_exists('idmenu',$param) && array_key_exists('menombre',$param) && array_key_exists('medescripcion',$param)
-                && array_key_exists('idpadre',$param) && array_key_exists('medeshabilitado',$param)){
+                && array_key_exists('padre',$param) && array_key_exists('medeshabilitado',$param)){
             $obj = new Menu();
 
             if(isset($param['medeshabilitado']) && $param['medeshabilitado'] == 'true') {
                 $param['medeshabilitado'] = date("Y-m-d H:i:s"); // me aseguro de que se pase el tipo de dato de forma correcta, ignorando la fecha real pasada
             } else $param['medeshabilitado'] = null;
             
-            $obj->setear($param['idmenu'], $param['menombre'],$param['medescripcion'],$param['idpadre'],$param['medeshabilitado']); 
+            $obj->setear($param['idmenu'], $param['menombre'],$param['medescripcion'],$param['padre'],$param['medeshabilitado']); 
         }
         return $obj;
     }
@@ -53,6 +53,10 @@ class MenuController {
         $resp = false;
         $param['idmenu'] =null;
         $param['medeshabilitado'] = null;
+
+        $padre = $this->buscar($param['idpadre']);
+        $param['padre'] = !empty($padre[0])? $padre[0] : null;
+        
         $menu = $this->cargarObjeto($param);
         if ($menu !== null && $menu->insertar()){
             $resp = true;
@@ -95,11 +99,9 @@ class MenuController {
     
     /**
      * @param array $param
-     * @param int $idrol si se deesea buscar todos los menues para un rol especifico
-     * @param int $sin_rol Para mostrar menus sin rol especifico
      * @return array<Menu>
      */
-    public function buscar($param = [], $idrol = null){
+    public function buscar($param = []){
         $where = " true ";
         if ($param<>NULL){
             if  (isset($param['idmenu']))
@@ -112,7 +114,7 @@ class MenuController {
                  $where.=" and medeshabilitado ='".$param['medeshabilitado']."'";
         }
 
-        $arreglo = Menu::listar($where, $idrol);  
+        $arreglo = Menu::listar($where);  
         return $arreglo;  
     }
    

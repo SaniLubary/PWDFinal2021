@@ -1,7 +1,5 @@
 <?php
 $menuController = new MenuController();
-
-//? Ya hay una variable 'menu' creada en el Header. Pero una vez iniciado el header, se puede pisar tranquilamente
 $menus = $menuController->buscar([]); 
 
 // Crear array de opciones para el select idpadre dentro de la tabla
@@ -13,11 +11,8 @@ foreach ($menus as $menu) {
   $menombre = $menu->getMenombre();
 
   // Si se tiene un id padre, se busca y guarda su nombre para poder agarralo en la creacion de la tabla mas abajo
-  if ($menu->getIdpadre()) {
-    $menu_padre = $menuController->buscar(['idmenu'=>$menu->getIdpadre()]);
-    if (count($menu_padre) > 0) {
-      $idpadre_menombre[$menu->getIdpadre()] = $menu_padre[0]->getMenombre();
-    }
+  if ($menu->getpadre() != null) {
+    $idpadre_menombre[$menu->getpadre()->getidmenu()] = $menu->getpadre()->getMenombre();
   }
   
   $opciones[$idmenu] = "<option value=\"$idmenu\">$idmenu: $menombre</option>";
@@ -55,27 +50,32 @@ foreach ($menus as $menu) {
 
         // Se formatea la fecha de menu-deshabilitado
         $medeshabilitado = $menu->getMedeshabilitado();
-        if (isset($medeshabilitado) && $medeshabilitado !== (null or '')){
+        if (!empty($medeshabilitado)){
           $medeshabilitado = date("Y-m-d",strtotime($medeshabilitado));
         } else $medeshabilitado = ''; 
+
+        $menupadre = $menu->getpadre();
+        $idpadre = !empty($menupadre)?$menupadre->getIdmenu():'';
         
       ?>
         <tr id="tr-<?= $id ?>">
           <td>
             <?= $id ?>
             <!-- Input de id oculto para enviar al controller el id a modificar -->
-            <input readonly name="idmenu" id="idmenu" class="form-control d-none" type="number" value="<?= $id ?>">
+            <input readonly name="idmenu" id="<?=$id?>idmenu" class="form-control d-none" type="number" value="<?= $id ?>">
           </td>
           <td><input name="menombre" id="<?=$id?>menombre" class="form-control" type="text" value="<?= $menu->getMenombre() ?>"></td>
           <td><input name="medescripcion" id="<?=$id?>medescripcion" class="form-control" type="text" value="<?= $menu->getMedescripcion() ?>"></td>
           <td>
             <select name="idpadre" id="<?=$id?>idpadre" class="form-select form-select-sm">
-                <option value='<?= $menu->getIdpadre() ?>' selected><?= $menu->getIdpadre()? $menu->getIdpadre().': '.$idpadre_menombre[$menu->getIdpadre()]:'' ?></option>
+                <option value='<?= $idpadre ?>' selected><?= $idpadre != ('' or null)? $idpadre.': '.$menupadre->getmenombre():'' ?></option>
                 <?= $opciones_select_imploded ?>
             </select>
+          </td>
           <td>
             <input name="medeshabilitado" id="<?=$id?>medeshabilitado" <?= $medeshabilitado === '' ?'':'checked' ?> class="form-check-input text-center float-none" style="text-align: initial;" type="checkbox">
             <input readonly type="date" value="<?=$medeshabilitado?>" class="form-control">
+          </td>
           <td>
             <!-- Acciones  -->
             <button class="btn btn-success" onclick="actualizar('tr-<?= $id?>','menu')">

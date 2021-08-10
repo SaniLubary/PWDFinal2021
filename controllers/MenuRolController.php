@@ -101,8 +101,8 @@ class MenuRolController {
         if ($param<>NULL){
             if  (isset($param['idmenu']))
                 $where.=" and idmenu =".$param['idmenu'];
-                if  (isset($param['idrol']))
-                    $where.=" and idrol ='".$param['idrol']."'";
+            if  (isset($param['idrol']))
+                $where.=" and idrol ='".$param['idrol']."'";
         }
         $rol = new MenuRol();
         $arreglo = $rol->listar($where);

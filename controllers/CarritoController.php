@@ -36,7 +36,6 @@ class CarritoController {
      * Agrega producto seleccionado al carro, crea nueva compra/carrito si no hay ninguna activa
      * @param int $idproducto
      * @param int $cicantidad La cantidad que se quiere comprar de un producto
-     * @param int? $idcompra Carrito al que se agregara el producto
      * @return bool 
      */
     function agregarAlCarrito($idproducto, $cicantidad) {
@@ -65,8 +64,8 @@ class CarritoController {
             // Se suman cicantidades
             $param = [];
             $param['idcompraitem'] = $compraitem->getIdcompraitem();
-            $param['idproducto'] = $compraitem->getIdproducto();
-            $param['idcompra'] = $compraitem->getIdcompra();
+            $param['producto'] = $compraitem->getproducto()->getIdproducto();
+            $param['compra'] = $compraitem->getcompra()->getIdcompra();
             $param['cicantidad'] = $compraitem->getCicantidad() + $cicantidad;
             
             if ( !$compraItemController->modificacion($param) ) {
@@ -124,7 +123,7 @@ class CarritoController {
         $cetController = new CompraEstadoTipoController();
         $compraestadotipo = $cetController->buscar(['idcompraestadotipo' => 1]);
         
-        if ($compra && !$compraEstadoController->alta(['idcompra' => $compra->getIdcompra(), 'compraestadotipo' => $compraestadotipo])) {
+        if ($compra && !$compraEstadoController->alta(['idcompra' => $compra->getIdcompra(), 'compraestadotipo' => $compraestadotipo[0]])) {
             return false;
         }
 

@@ -3,7 +3,7 @@ class Menu {
     private $idmenu;
     private $menombre;
     private $medescripcion;
-    private $idpadre;
+    private $padre;
     private $medeshabilitado;
     private $mensajeoperacion;
     
@@ -37,14 +37,14 @@ class Menu {
         $this->medescripcion = $medescripcion;
     }
 
-    public function getIdpadre()
+    public function getpadre()
     {
-        return $this->idpadre;
+        return $this->padre;
     }
 
-    public function setIdpadre($idpadre)
+    public function setpadre($padre)
     {
-        $this->idpadre = $idpadre;
+        $this->padre = $padre;
     }
 
     public function getMedeshabilitado()
@@ -71,17 +71,17 @@ class Menu {
          $this->idmenu="";
          $this->menombre="" ;
          $this->medescripcion="";
-         $this->idpadre="";
+         $this->padre="";
          $this->medeshabilitado = null;
          $this->mensajeoperacion ="";
         
      }
 
-     public function setear($idmenu, $menombre,$medescripcion, $idpadre,$medeshabilitado)    {
+     public function setear($idmenu, $menombre,$medescripcion, $padre,$medeshabilitado)    {
         $this->setIdmenu($idmenu);
         $this->setMenombre($menombre);
         $this->setMedescripcion($medescripcion);
-        $this->setIdpadre($idpadre);
+        $this->setpadre($padre);
         $this->setMedeshabilitado($medeshabilitado);
     }
     
@@ -98,7 +98,12 @@ class Menu {
         
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
-            $this->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$row['idpadre'],$row['medeshabilitado']); 
+
+            $menucontroller = new MenuController();
+            $padre = $menucontroller->buscar(['idmenu' => $row['idmenu']]);
+            if (!empty($padre)) $padre = $padre[0];
+            
+            $this->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$padre,$row['medeshabilitado']); 
         }
         
         return true;       
@@ -107,8 +112,8 @@ class Menu {
     public function insertar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="INSERT INTO menu( menombre ,  medescripcion ,  idpadre ,  medeshabilitado) 
-            VALUES('".$this->getMenombre()."','".$this->getMedescripcion()."', '".$this->getIdpadre()."', '".$this->getMedeshabilitado()."') ";
+        $sql="INSERT INTO menu( menombre ,  medescripcion ,  padre ,  medeshabilitado) 
+            VALUES('".$this->getMenombre()."','".$this->getMedescripcion()."', '".$this->getpadre()."', '".$this->getMedeshabilitado()."') ";
 
         if (!$base->Iniciar()) {
             $this->setmensajeoperacion("Menu->insertar: ".$base->getError()[2]);
@@ -128,9 +133,9 @@ class Menu {
         $resp = false;
         $base=new BaseDatos();
 
-        $idpadre = $this->getIdpadre();
-        if ( $idpadre !== ('' or null) && is_numeric($idpadre)) {
-            $sql_idpadre = ", idpadre='$idpadre'";
+        $padre = $this->getpadre();
+        if ( $padre !== ('' or null) && is_numeric($padre)) {
+            $sql_idpadre = ", padre='$padre'";
         } else $sql_idpadre = '';
         
         $medeshabilitado = $this->getMedeshabilitado();
@@ -175,7 +180,7 @@ class Menu {
      * @param string $condicion condicional 'where'
      * @param int $menus_con_roles Si se desea buscar los menus que corresponden a un cierto rol
      */
-    public static function listar($condicion="", $idrol = null){
+    public static function listar($condicion=""){
         $arreglo = array();
         $base = new BaseDatos();
         $sql = "SELECT * FROM menu ";
@@ -184,20 +189,18 @@ class Menu {
             $sql .= 'WHERE '.$condicion;
         }
 
-        if ($idrol != null && $idrol != false && is_numeric($idrol)) { // Se muestran los menus del idrol indicado
-            $sql = "SELECT m.* from menu m 
-                    inner join menurol m2 on m2.idmenu = m.idmenu 
-                    inner join rol r on r.idrol = m2.idrol 
-                    where m2.idrol = $idrol";
-        }
-
         $res = $base->Ejecutar($sql);
         if($res>-1){
             if($res>0){
                 
                 while ($row = $base->Registro()){
                     $obj = new Menu();
-                    $obj->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$row['idpadre'], $row['medeshabilitado']); 
+
+                    $menucontroller = new MenuController();
+                    $padre = $row['idpadre'] == null?:$menucontroller->buscar(['idmenu' => $row['idpadre']]);
+                    if (!empty($padre)) $padre = $padre[0];    
+                    
+                    $obj->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$padre, $row['medeshabilitado']); 
                     array_push($arreglo, $obj);
                 }
                 
