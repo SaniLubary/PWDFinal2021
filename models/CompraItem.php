@@ -1,7 +1,5 @@
 <?php
 
-use JetBrains\PhpStorm\Internal\ReturnTypeContract;
-
 class CompraItem {
     private $idcompraitem;
     private $producto;
