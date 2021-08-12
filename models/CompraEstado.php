@@ -111,12 +111,10 @@ class CompraEstado {
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
             
-            $compraController = new CompraController();
-            $compra = $compraController->buscar(['idcompra' => $row['idcompra']]);
+            $compra = Compra::listar(' true and idcompra = ' . $row['idcompra']);
             if (!empty($compra)) $compra = $compra[0];
             
-            $cetController = new CompraEstadoTipoController();
-            $compraestadotipo = $cetController->buscar(['idcompraestadotipo' => $row['idcompraestadotipo']]);
+            $compraestadotipo = CompraEstadoTipo::listar(' true and idcompraestadotipo = ' . $row['idcompraestadotipo']);
             if (!empty($compraestadotipo)) $compraestadotipo = $compraestadotipo[0];
             
             $this->setear($row['idcompraestado'],$compra,$compraestadotipo,$row['cefechaini'],$row['cefechafin']); 
@@ -201,14 +199,12 @@ class CompraEstado {
                 while ($row = $base->Registro()){
                     $obj = new CompraEstado();
 
-                    $compraController = new CompraController();
-                    $compra = $compraController->buscar(['idcompra' => $row['idcompra']]);
+                    $compra = Compra::listar(' true and idcompra = ' . $row['idcompra']);
                     if (!empty($compra)) $compra = $compra[0];
                     
-                    $cetController = new CompraEstadoTipoController();
-                    $compraestadotipo = $cetController->buscar(['idcompraestadotipo' => $row['idcompraestadotipo']]);
+                    $compraestadotipo = CompraEstadoTipo::listar(' true and idcompraestadotipo = ' . $row['idcompraestadotipo']);
                     if (!empty($compraestadotipo)) $compraestadotipo = $compraestadotipo[0];
-                            
+                   
                     $obj->setear($row['idcompraestado'],$compra,$compraestadotipo, $row['cefechaini'],$row['cefechafin']); 
                     array_push($arreglo, $obj);
                 }

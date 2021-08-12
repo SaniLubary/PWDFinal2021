@@ -5,7 +5,7 @@ class Producto {
     private $prodetalle;
     private $procantstock;
     private $cicantidad; // se setea cuando se realiza la busqueda en listarProductosDeCompra() para saber cuantos de cada producto agrego una persona a su carro
-    private $idcompraitem; // se setea cuando se realiza la busqueda en listarProductosDeCompra() para saber que idcompraitem dar de baja cunado se quiere quitar un producto del carrito
+    private $compraitem; // se setea cuando se realiza la busqueda en listarProductosDeCompra() para saber que compraitem dar de baja cunado se quiere quitar un producto del carrito
     private $mensajeoperacion;
     
     public function getIdproducto()
@@ -58,14 +58,14 @@ class Producto {
         return $this->cicantidad;
     }
 
-    public function setIdcompraitem($idcompraitem)
+    public function setcompraitem($compraitem)
     {
-        $this->idcompraitem = $idcompraitem;
+        $this->compraitem = $compraitem;
     }
 
-    public function getIdcompraitem()
+    public function getcompraitem()
     {
-        return $this->idcompraitem;
+        return $this->compraitem;
     }
 
     public function getMensajeoperacion()
@@ -86,13 +86,13 @@ class Producto {
          $this->mensajeoperacion ="";
      }
 
-     public function setear($idproducto, $pronombre, $prodetalle, $procantstock, $cicantidad=null, $idcompraitem=null)    {
+     public function setear($idproducto, $pronombre, $prodetalle, $procantstock, $cicantidad=null, $compraitem=null)    {
         $this->setIdproducto($idproducto);
         $this->setPronombre($pronombre);
         $this->setProdetalle($prodetalle);
         $this->setProcantstock($procantstock);
         $this->setCicantidad($cicantidad);
-        $this->setIdcompraitem($idcompraitem);
+        $this->setcompraitem($compraitem);
     }
     
     
@@ -208,7 +208,11 @@ class Producto {
                     
                     while ($row = $base->Registro()){
                         $obj = new Producto();
-                        $obj->setear($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['procantstock'], $row['cicantidad'], $row['idcompraitem']); 
+
+                        $compraitem = CompraItem::listar(' true and idcompraitem = ' . $row['idcompraitem']);
+                        if (!empty($compraitem)) $compraitem = $compraitem[0];    
+                        
+                        $obj->setear($row['idproducto'], $row['pronombre'], $row['prodetalle'], $row['procantstock'], $row['cicantidad'], $compraitem); 
                         array_push($arreglo, $obj);
                     }
                     

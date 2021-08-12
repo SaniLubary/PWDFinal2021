@@ -104,9 +104,8 @@ $carrito = $carritoController->verCarrito();
 function crearTarjetaCarrito($producto) {
     $id = $producto->getIdproducto();
     $nombre = $producto->getPronombre();
-    $detalle = $producto->getProdetalle();
     $cicantidad = $producto->getCicantidad();
-    $idcompraitem = $producto->getIdcompraitem();
+    $idcompraitem = $producto->getCompraitem()->getIdcompraitem();
 
     $opciones_select = "";
     // Si el cicantidad supera los 6, se da la opcion de escribir una cantidad deseada 

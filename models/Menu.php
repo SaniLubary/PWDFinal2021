@@ -99,8 +99,7 @@ class Menu {
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
 
-            $menucontroller = new MenuController();
-            $padre = $menucontroller->buscar(['idmenu' => $row['idmenu']]);
+            $padre = ( $row['idpadre'] == null ) ?: Menu::listar(' true and idmenu = ' . $row['idpadre']);
             if (!empty($padre)) $padre = $padre[0];
             
             $this->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$padre,$row['medeshabilitado']); 
@@ -111,9 +110,9 @@ class Menu {
     
     public function insertar(){
         $resp = false;
-        $base=new BaseDatos();
-        $sql="INSERT INTO menu( menombre ,  medescripcion ,  padre ,  medeshabilitado) 
-            VALUES('".$this->getMenombre()."','".$this->getMedescripcion()."', '".$this->getpadre()."', '".$this->getMedeshabilitado()."') ";
+        $base = new BaseDatos();
+        $sql = "INSERT INTO menu( menombre ,  medescripcion ,  idpadre ,  medeshabilitado) 
+            VALUES('".$this->getMenombre()."','".$this->getMedescripcion()."', '".$this->getpadre()->getIdmenu()."', '".$this->getMedeshabilitado()."') ";
 
         if (!$base->Iniciar()) {
             $this->setmensajeoperacion("Menu->insertar: ".$base->getError()[2]);
@@ -196,8 +195,7 @@ class Menu {
                 while ($row = $base->Registro()){
                     $obj = new Menu();
 
-                    $menucontroller = new MenuController();
-                    $padre = $row['idpadre'] == null?:$menucontroller->buscar(['idmenu' => $row['idpadre']]);
+                    $padre = ( $row['idpadre'] == null ) ?: Menu::listar(' true and idmenu = ' . $row['idpadre']);
                     if (!empty($padre)) $padre = $padre[0];    
                     
                     $obj->setear($row['idmenu'], $row['menombre'],$row['medescripcion'],$padre, $row['medeshabilitado']); 

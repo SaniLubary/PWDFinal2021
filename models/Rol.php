@@ -107,7 +107,7 @@ class Rol {
         return $resp;
     }
     
-    public  function listar($parametro=""){
+    public static function listar($parametro=""){
         $arreglo = array();
         $base=new BaseDatos();
         $sql="SELECT * FROM rol ";
@@ -117,17 +117,12 @@ class Rol {
         $resp = $base->Ejecutar($sql);
         if($resp>-1){
             if($resp>0){
-                
                 while ($row = $base->Registro()){
                     $obj= new Rol();
                     $obj->setear($row['idrol'], $row['rodescripcion']) ;
                     array_push($arreglo, $obj);
-                }
-                
+                }   
             }
-            
-        } else {
-            $this->setmensajeoperacion("Tabla->listar: ".$base->getError());
         }
         
         return $arreglo;

@@ -74,10 +74,9 @@ class Compra {
         if($base->Ejecutar($sql) > 0){
             $row = $base->Registro();
 
-            $usController = new UsuarioController();
-            $usuario = $usController->buscar(['idusuario' => $row['idusuario']]);
+            $usuario = Usuario::listar(' true and idusuario = ' . $row['idusuario']);
             if (!empty($usuario)) $usuario = $usuario[0];
-            
+
             $this->setear($row['idcompra'], $row['cofecha'], $row['idcompra'], $usuario); 
         }
 
@@ -184,8 +183,7 @@ class Compra {
                 while ($row = $base->Registro()){
                     $obj = new Compra();
 
-                    $usController = new UsuarioController();
-                    $usuario = $usController->buscar(['idusuario' => $row['idusuario']]);
+                    $usuario = Usuario::listar(' true and idusuario = ' . $row['idusuario']);
                     if (!empty($usuario)) $usuario = $usuario[0];
 
                     $obj->setear($row['idcompra'], $row['cofecha'], $usuario); 

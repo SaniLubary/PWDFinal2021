@@ -58,14 +58,12 @@ class MenuRol {
                 if($res>0){
                     $row = $base->Registro();
 
-                    $rolcontroller = new RolController();
-                    $rol = $rolcontroller->buscar(['idrol' => $row['idrol']]);
+                    $rol = Rol::listar('true and idrol = '. $row['idrol']);
                     if (!empty($rol)) $rol = $rol[0];
 
-                    $menucontroller = new MenuController();
-                    $menu = $menucontroller->buscar(['idmenu' => $row['idmenu']]);
+                    $menu = Menu::listar('true and idmenu = ' . $row['idmenu']);
                     if (!empty($menu)) $menu = $menu[0];
-
+                    
                     $this->setear($menu, $row); 
                 }
             }
@@ -80,8 +78,8 @@ class MenuRol {
     public function insertar(){
         $resp = false;
         $base=new BaseDatos();
-        $sql="INSERT INTO MenuRol( menu, rol )  ";
-        $sql.="VALUES('".$this->getmenu()."', '".$this->getrol()."');";
+        $sql="INSERT INTO MenuRol( idmenu, idrol )  ";
+        $sql.="VALUES('".$this->getmenu()->getIdmenu()."', '".$this->getrol()->getIdmenu()."');";
         if ($base->Iniciar()) {
             if ($elid = $base->Ejecutar($sql)) {
                 $this->setmenu($elid);
@@ -143,12 +141,10 @@ class MenuRol {
                 while ($row = $base->Registro()){
                     $obj = new MenuRol();
 
-                    $rolcontroller = new RolController();
-                    $rol = $rolcontroller->buscar(['idrol' => $row['idrol']]);
+                    $rol = Rol::listar('true and idrol = ' . $row['idrol']);
                     if (!empty($rol)) $rol = $rol[0];
 
-                    $menucontroller = new MenuController();
-                    $menu = $menucontroller->buscar(['idmenu' => $row['idmenu']]);
+                    $menu = Menu::listar('true and idmenu = ' . $row['idmenu']);
                     if (!empty($menu)) $menu = $menu[0];
                     
                     $obj->setear($menu, $rol); 

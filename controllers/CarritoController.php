@@ -93,8 +93,6 @@ class CarritoController {
      * @return bool 
      */
     function quitarDelCarrito($cicantidad, $idcompraitem) {
-        $compras_activas = $this->verCarrito();
-
         // Se quita el item indicado
         $compraItemController = new CompraItemController();
         if (!$compraItemController->baja(['idcompraitem' => $idcompraitem, 'cicantidad' => $cicantidad])) {

@@ -1,4 +1,7 @@
 <?php
+
+use JetBrains\PhpStorm\Internal\ReturnTypeContract;
+
 class CompraItem {
     private $idcompraitem;
     private $producto;
@@ -80,19 +83,17 @@ class CompraItem {
             return false;
         }
         
-        $row = $base->Registro();
+        if ($row = $base->Registro()) {
+            $compra = ( $row['idcompra'] == null ) ?: Compra::listar(' true and idcompra = ' . $row['idcompra']);
+            if (!empty($compra)) $compra = $compra[0];  
+            
+            $producto = ( $row['idproducto'] == null ) ?: Producto::listar(' true and idproducto = ' . $row['idproducto']);
+            if (!empty($producto)) $producto = $producto[0];  
+            
+            $this->setear($row['idcompraitem'], $producto, $compra, $row['cicantidad']); 
 
-        $compraController = new compraController();
-        $compra = $row['idcompra'] == null?:$compraController->buscar(['idcompra' => $row['idcompra']]);
-        if (!empty($compra)) $compra = $compra[0];  
-        
-        $productoController = new productoController();
-        $producto = $row['idproducto'] == null?:$productoController->buscar(['idproducto' => $row['idproducto']]);
-        if (!empty($producto)) $producto = $producto[0];  
-        
-        $this->setear($row['idcompraitem'], $producto, $compra, $row['cicantidad']); 
-        
-        return true;
+            return true;
+        } else return false;        
     }
     
     public function insertar(){
@@ -161,12 +162,10 @@ class CompraItem {
                 while ($row = $base->Registro()){
                     $obj = new compraItem();
 
-                    $compraController = new compraController();
-                    $compra = $row['idcompra'] == null?:$compraController->buscar(['idcompra' => $row['idcompra']]);
+                    $compra = ( $row['idcompra'] == null ) ?: Compra::listar(' true and idcompra = ' . $row['idcompra']);
                     if (!empty($compra)) $compra = $compra[0];  
                     
-                    $productoController = new productoController();
-                    $producto = $row['idproducto'] == null?:$productoController->buscar(['idproducto' => $row['idproducto']]);
+                    $producto = ( $row['idproducto'] == null ) ?: Producto::listar(' true and idproducto = ' . $row['idproducto']);
                     if (!empty($producto)) $producto = $producto[0];  
                     
                     $obj->setear($row['idcompraitem'], $producto, $compra, $row['cicantidad']); 

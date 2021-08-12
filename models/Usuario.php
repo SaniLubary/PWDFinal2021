@@ -140,7 +140,7 @@ class Usuario {
         return $resp;
     }
     
-    public function listar($parametro=""){
+    public static function listar($parametro=""){
         $arreglo = array();
         $base=new BaseDatos();
         $sql="SELECT * FROM usuario ";
@@ -158,8 +158,6 @@ class Usuario {
                     array_push($arreglo, $obj);
                 }
             }
-        } else {
-            $this->setmensajeoperacion(get_class()."->listar: ".$base->getError());
         }
         
         return $arreglo;

@@ -56,12 +56,10 @@ class UsuarioRol {
                 if($res>0){
                     $row = $base->Registro();
 
-                    $usController = new UsuarioController();
-                    $usuario = $usController->buscar(['idusuario' => $row['idusuario']]);
+                    $usuario = Usuario::listar('true and idusuario = ' . $row['idusuario']);
                     if (!empty($usuario)) $usuario = $usuario[0];
 
-                    $rolController = new RolController();
-                    $rol = $rolController->buscar(['idrol' => $row['idrol']]);
+                    $rol = Rol::listar('true and idrol = ' . $row['idrol']);
                     if (!empty($rol)) $rol = $rol[0];
                     
                     $this->setear($usuario, $rol);
@@ -138,12 +136,10 @@ class UsuarioRol {
                 while ($row = $base->Registro()){
                     $obj= new UsuarioRol();
 
-                    $usController = new UsuarioController();
-                    $usuario = $usController->buscar(['idusuario' => $row['idusuario']]);
+                    $usuario = Usuario::listar('true and idusuario = ' . $row['idusuario']);
                     if (!empty($usuario)) $usuario = $usuario[0];
 
-                    $rolController = new RolController();
-                    $rol = $rolController->buscar(['idrol' => $row['idrol']]);
+                    $rol = Rol::listar('true and idrol = ' . $row['idrol']);
                     if (!empty($rol)) $rol = $rol[0];
                     
                     $obj->setear($usuario, $rol);
